@@ -5,6 +5,7 @@ import java.util.UUID;
 /**
  * Created by viccrubs on 2017/5/6.
  */
+
 public class Controller implements Runnable {
     private Socket client = null;
     private String machineUUID= UUID.randomUUID().toString();
