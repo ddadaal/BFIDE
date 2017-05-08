@@ -7,11 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="BFIDEClient" />
+        <module name="BFIDEServer" />
+        <module name="Shared" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="BFIDEServer" target="1.8" />
-      <module name="Shared" target="1.8" />
+      <module name="BFIDEServer" target="1.5" />
+      <module name="Shared" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
