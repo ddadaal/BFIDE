@@ -24,7 +24,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="client" target="1.8" />
-      <module name="shared" target="1.5" />
+      <module name="shared" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
