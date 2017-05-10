@@ -20,11 +20,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="client" />
         <module name="shared" />
+        <module name="Shared" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="client" target="1.8" />
-      <module name="shared" target="1.8" />
+      <module name="Shared" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

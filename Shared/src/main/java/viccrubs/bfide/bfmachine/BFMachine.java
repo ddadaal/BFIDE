@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by viccrubs on 2017/5/3.
  */
-public class BFMachine {
+public class BFMachine implements IMachine {
 
     private BFMachineStates states = new BFMachineStates();
 
@@ -51,13 +51,8 @@ public class BFMachine {
         this.states.reset();
     }
 
-
-
-    public void loadProgram(String program){
+    public ExecutionResult executeProgram(String program) throws BFMachineException {
         this.states.program = program.replace("\r\n","\n");
-    }
-
-    public ExecutionResult executeProgram() throws IOException, BFMachineException {
         occurredException = null;
         while (stepOver()){
             if (occurredException!=null){
@@ -69,16 +64,17 @@ public class BFMachine {
     }
 
     public ExecutionResult constructResult(BFMachineException exception){
-        ExecutionResult result = new ExecutionResult();
-        result.exception = exception;
-        result.states = this.states;
-        return result;
+        return new ExecutionResult(exception, outStream.getContent());
     }
 
 
     public BFMachine(DynamicOutStream outStream, DynamicInStream inStream){
         this.outStream = outStream;
         this.inStream = inStream;
+    }
+
+    public BFMachine(){
+
     }
 
     public boolean stepOver() throws  BFMachineException {
