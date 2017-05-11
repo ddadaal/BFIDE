@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by viccrubs on 2017/5/3.
  */
-public class BFMachine implements IMachine {
+public class BFMachine {
 
     private BFMachineStates states = new BFMachineStates();
 
@@ -51,6 +51,24 @@ public class BFMachine implements IMachine {
         this.states.reset();
     }
 
+    public ExecutionResult executeOokProgram(String program) throws BFMachineException{
+        int ookInstructionLength = 6;
+        StringBuilder builder = new StringBuilder();
+        program = program.replace(" ","");
+        for(int startPointer=0;startPointer<program.length();startPointer+=ookInstructionLength){
+            if (startPointer+ookInstructionLength>=program.length()){
+                throw new OokUnknownInstructionException(states, program.substring(startPointer));
+            }
+            char bf= translateOokToBF(program.substring(startPointer, startPointer+ookInstructionLength));
+            if (bf==0){
+                throw new OokUnknownInstructionException(states, program.substring(startPointer, startPointer+ookInstructionLength));
+            }
+            builder.append(bf);
+        }
+
+        return executeProgram(builder.toString());
+    }
+
     public ExecutionResult executeProgram(String program) throws BFMachineException {
         this.states.program = program.replace("\r\n","\n");
         occurredException = null;
@@ -76,6 +94,53 @@ public class BFMachine implements IMachine {
     public BFMachine(){
 
     }
+
+    public static char translateOokToBF(String instruction){
+        switch(instruction){
+            case "Ook.Ook?":
+                return '>';
+            case "Ook?Ook.":
+                return '<';
+            case "Ook.Ook.":
+                return '+';
+            case "Ook!Ook!":
+                return '-';
+            case "Ook!Ook.":
+                return '.';
+            case "Ook.Ook!":
+                return ',';
+            case "Ook!Ook?":
+                return '[';
+            case "Ook?Ook!":
+                return ']';
+            default:
+                return 0;
+        }
+    }
+
+    public static String translateBFToOok(char bf){
+        switch(bf){
+            case '>':
+                return "Ook. Ook?";
+            case '<':
+                return "Ook? Ook.";
+            case '+':
+                return "Ook. Ook.";
+            case '-':
+                return "Ook! Ook!";
+            case '.':
+                return "Ook! Ook.";
+            case ',':
+                return "Ook. Ook!";
+            case '[':
+                return "Ook! Ook?";
+            case ']':
+                return "Ook? Ook!";
+            default:
+                return "???";
+        }
+    }
+
 
     public boolean stepOver() throws  BFMachineException {
         this.executeInstruction(this.states.program.charAt(this.states.programCounter));

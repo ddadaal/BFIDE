@@ -12,8 +12,11 @@ public class LoginResponse {
     @Expose
     public final boolean success;
 
+
+
     public LoginResponse(boolean success) {
         this.success = success;
 
     }
+
 }

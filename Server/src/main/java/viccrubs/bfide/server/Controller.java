@@ -71,8 +71,6 @@ public class Controller implements Runnable {
                 out.println(gson.toJson(new LoginResponse(true)));
             }
 
-            //identify machine type
-
 
 
             while(inScanner.hasNext() && !terminate){

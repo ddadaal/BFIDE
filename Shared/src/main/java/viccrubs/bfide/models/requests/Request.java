@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
  */
 public class Request {
     @Expose
-    public String type;
+    public final static String type="BASE_REQUEST";
 
 
 }

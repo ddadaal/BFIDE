@@ -7,5 +7,5 @@ import com.google.gson.annotations.Expose;
  */
 public class Response {
     @Expose
-    public String type;
+    public final static String type="BASE_RESPONSE";
 }

@@ -11,6 +11,7 @@ public class RequestParser implements JsonDeserializer<Request> {
     @Override
     public Request deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         JsonElement jsonType = jsonObject.get("type");
         String typeField = jsonType.getAsString();
@@ -19,10 +20,13 @@ public class RequestParser implements JsonDeserializer<Request> {
 
         switch(typeField){
             case LoginRequest.type:
-                typeModel = new LoginRequest(jsonObject.get("username").getAsString(), jsonObject.get("password").getAsString());
+                typeModel = gson.fromJson(jsonObject, LoginRequest.class);
                 break;
             case RunProgramRequest.type:
-                typeModel = new RunProgramRequest(jsonObject.get("program").getAsString());
+                typeModel = gson.fromJson(jsonObject, RunProgramRequest.class);
+                break;
+            case InputRequest.type:
+                typeModel = gson.fromJson(jsonObject, InputRequest.class);
                 break;
             default:
                 typeModel = null;
