@@ -7,18 +7,15 @@ import viccrubs.bfide.models.ProgramLanguage;
  * Created by viccrubs on 2017/5/9.
  */
 public class RunProgramRequest extends Request {
-    @Expose
-    public final static String type = "RUN_PROGRAM";
 
-    @Expose
     public final String program;
 
-    @Expose
     public final ProgramLanguage language;
 
     public RunProgramRequest(String program, ProgramLanguage language) {
         this.program = program;
 
         this.language = language;
+        this.type = RequestType.RunProgram;
     }
 }

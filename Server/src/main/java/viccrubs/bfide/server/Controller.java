@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import viccrubs.bfide.bfmachine.*;
+import viccrubs.bfide.models.ConfiguredGson;
 import viccrubs.bfide.models.ExecutionResult;
 import viccrubs.bfide.models.User;
 import viccrubs.bfide.models.requests.*;
@@ -11,6 +12,7 @@ import viccrubs.bfide.models.response.LoginResponse;
 import viccrubs.bfide.models.response.Response;
 import viccrubs.bfide.models.response.ResponseParser;
 import viccrubs.bfide.server.storage.authentication.Authentication;
+import viccrubs.bfide.server.storage.authentication.Register;
 import viccrubs.bfide.utilities.DynamicInStream;
 import viccrubs.bfide.utilities.DynamicOutStream;
 
@@ -25,7 +27,7 @@ import java.util.UUID;
 
 public class Controller implements Runnable {
     private Socket client = null;
-    private IMachine machine;
+    private BFMachine machine;
     private PrintStream out;
     private Scanner inScanner;
     private DynamicInStream machineInStream;
@@ -34,11 +36,7 @@ public class Controller implements Runnable {
 
     public Controller(Socket client){
         this.client = client;
-        this.gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(Request.class, new RequestParser())
-                .registerTypeAdapter(Response.class, new ResponseParser())
-                .create();
+        this.gson = ConfiguredGson.get();
         this.machineInStream = new DynamicInStream();
         this.machineOutStream = new DynamicOutStream();
 
@@ -61,15 +59,25 @@ public class Controller implements Runnable {
 
             //auth
             Authentication auth = new Authentication();
-            LoginRequest user = gson.fromJson(inScanner.next(), LoginRequest.class);
+            Request firstRequest = gson.fromJson(inScanner.next(), Request.class);
 
-            User authenticated = auth.authenticate(user.username, user.password).orElse(null);
-            if (authenticated==null){
-                out.println(gson.toJson(new LoginResponse(false)));
-                terminate=true;
-            }else{
-                out.println(gson.toJson(new LoginResponse(true)));
+            if (firstRequest instanceof LoginRequest ){
+                LoginRequest user = (LoginRequest)firstRequest;
+                User authenticated = auth.authenticate(user.username, user.password).orElse(null);
+                if (authenticated==null){
+                    out.println(gson.toJson(new LoginResponse(false)));
+                    terminate=true;
+                }else{
+                    out.println(gson.toJson(new LoginResponse(true)));
+                }
+            }else if(firstRequest instanceof RegisterRequest){
+                RegisterRequest register =(RegisterRequest)firstRequest;
+                if (Register.register(register.username, register.password).isPresent()){
+                    out.println();
+                }
             }
+
+
 
 
 
@@ -78,7 +86,7 @@ public class Controller implements Runnable {
                 Request request= gson.fromJson(str, Request.class);
                 if (request instanceof LoginRequest){
                     LoginRequest trueRequest = (LoginRequest)request;
-                    out.printf("%s. %s, %s", trueRequest.username, trueRequest.password);
+                    out.printf("Login Request Detected. %s, %s",  trueRequest.username, trueRequest.password);
                 }else if (request instanceof RunProgramRequest){
                     RunProgramRequest trueRequest = (RunProgramRequest)request;
                     out.printf("%s. program is %s", trueRequest.type, trueRequest.program);

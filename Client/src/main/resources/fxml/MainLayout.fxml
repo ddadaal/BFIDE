@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.MainLayout">
+<AnchorPane prefHeight="535.0" prefWidth="611.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.MainLayoutController">
    <children>
-      <MenuBar prefHeight="25.0" prefWidth="600.0">
+      <MenuBar prefHeight="25.0" prefWidth="608.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" text="Open" />
+                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" text="Save As..." />
+                  <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -21,12 +25,44 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="Version Control">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="About" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
+      <AnchorPane layoutY="308.0" prefHeight="208.0" prefWidth="611.0">
+         <children>
+            <Text layoutX="429.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output" />
+            <Text layoutX="135.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input" />
+            <Button layoutX="128.0" layoutY="169.0" mnemonicParsing="false" text="Send" />
+            <TextArea layoutY="40.0" prefHeight="129.0" prefWidth="300.0" />
+            <TextArea layoutX="308.0" layoutY="40.0" prefHeight="129.0" prefWidth="300.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="25.0" prefHeight="35.0" prefWidth="608.0">
+         <children>
+            <Button layoutX="8.0" layoutY="6.0" mnemonicParsing="false" text="Run" />
+            <ToggleButton layoutX="64.0" layoutY="6.0" mnemonicParsing="false" text="Change to Ook!" />
+            <MenuButton layoutX="503.0" layoutY="3.0" mnemonicParsing="false" text="Username">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Logout" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </MenuButton>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="548.0" prefHeight="25.0" prefWidth="611.0" AnchorPane.bottomAnchor="0.0">
+         <children>
+            <Text layoutX="8.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ready" AnchorPane.bottomAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <TextArea layoutY="60.0" prefHeight="248.0" prefWidth="611.0" promptText="Code here" wrapText="true" />
    </children>
 </AnchorPane>

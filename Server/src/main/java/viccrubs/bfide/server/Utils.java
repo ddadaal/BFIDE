@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class Utils {
 
-    public final static String downloadContent(String filePath) throws IOException {
+    public static String downloadContent(String filePath) throws IOException {
         URL url = BFIDEServer.class.getResource(filePath);
 
         Scanner scanner = new Scanner(url.openStream());
@@ -33,7 +33,7 @@ public class Utils {
         return Arrays.stream(paths).collect(Collectors.joining("/")).toString();
     }
 
-    public final static URI getFileUri(String filePath) throws URISyntaxException {
+    public static URI getFileUri(String filePath) throws URISyntaxException {
         return BFIDEServer.class.getResource(filePath).toURI();
     }
 

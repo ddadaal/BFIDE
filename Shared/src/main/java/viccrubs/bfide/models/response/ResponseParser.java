@@ -3,6 +3,7 @@ package viccrubs.bfide.models.response;
 import com.google.gson.*;
 import viccrubs.bfide.models.ExecutionResult;
 import viccrubs.bfide.models.requests.LoginRequest;
+import viccrubs.bfide.models.requests.RegisterRequest;
 import viccrubs.bfide.models.requests.Request;
 import viccrubs.bfide.models.requests.RunProgramRequest;
 
@@ -14,27 +15,25 @@ import java.lang.reflect.Type;
 public class ResponseParser implements JsonDeserializer<Response> {
     @Override
     public Response deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        Gson gson = new Gson();
 
-        JsonElement jsonType = jsonObject.get("type");
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String typeField = jsonType.getAsString();
+        Response baseResponse = gson.fromJson(jsonElement, Response.class);
 
-        Response typeModel = null;
-
-        switch(typeField){
-            case RunResultResponse.type:
-                typeModel = new RunResultResponse(gson.fromJson(jsonObject.get("result"), ExecutionResult.class));
-                break;
-            case RequestInputResponse.type:
-                typeModel = new RequestInputResponse();
-                break;
+        switch(baseResponse.type){
+            case LoginResponse:
+                return gson.fromJson(jsonElement, LoginResponse.class);
+            case RequestInput:
+                return gson.fromJson(jsonElement, RequestInputResponse.class);
+            case RegisterResponse:
+                return gson.fromJson(jsonElement, RegisterResponse.class);
+            case RunResult:
+                return gson.fromJson(jsonElement, RunResultResponse.class);
+            case TestConnection:
+                return gson.fromJson(jsonElement, TestConnectionResponse.class);
             default:
-                typeModel = null;
+                return null;
 
         }
-
-        return typeModel;
     }
 
 }

@@ -7,13 +7,11 @@ import viccrubs.bfide.models.ExecutionResult;
  * Created by viccrubs on 2017/5/10.
  */
 public class RunResultResponse extends Response {
-    @Expose
     public final ExecutionResult result;
 
-    @Expose
-    public final static String type="RUN_RESULT";
 
     public RunResultResponse(ExecutionResult result) {
+        this.type = ResponseType.RunResult;
         this.result = result;
     }
 }

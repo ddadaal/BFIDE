@@ -32,7 +32,7 @@ public class Register {
         newUser.username = username;
         newUser.password = password;
 
-        User[] newUsers = Stream.concat(Arrays.stream(auth.getUsers()), Stream.of(newUser)).toArray(size-> new User[size]);
+        User[] newUsers = Stream.concat(Arrays.stream(auth.getUsers()), Stream.of(newUser)).toArray(User[]::new);
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String newContent = gson.toJson(newUsers);
