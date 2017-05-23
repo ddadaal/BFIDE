@@ -11,6 +11,7 @@ import viccrubs.bfide.models.requests.*;
 import viccrubs.bfide.models.response.LoginResponse;
 import viccrubs.bfide.models.response.Response;
 import viccrubs.bfide.models.response.ResponseParser;
+import viccrubs.bfide.models.response.TestConnectionResponse;
 import viccrubs.bfide.server.storage.authentication.Authentication;
 import viccrubs.bfide.server.storage.authentication.Register;
 import viccrubs.bfide.utilities.DynamicInStream;
@@ -33,6 +34,7 @@ public class Controller implements Runnable {
     private DynamicInStream machineInStream;
     private DynamicOutStream machineOutStream;
     private Gson gson;
+    private User currentUser;
 
     public Controller(Socket client){
         this.client = client;
@@ -42,9 +44,13 @@ public class Controller implements Runnable {
 
     }
 
-    public void run() {
-        try{
+    public void output(Response res){
+        out.print(gson.toJson(res));
+        out.print("\r\n");
+    }
 
+    public void run() {
+        try {
 
 
             //获取Socket的输出流，用来向客户端发送数据
@@ -54,46 +60,35 @@ public class Controller implements Runnable {
             inScanner.useDelimiter("\r\n");
 
 
-
             boolean terminate = false;
 
             //auth
             Authentication auth = new Authentication();
-            Request firstRequest = gson.fromJson(inScanner.next(), Request.class);
-
-            if (firstRequest instanceof LoginRequest ){
-                LoginRequest user = (LoginRequest)firstRequest;
-                User authenticated = auth.authenticate(user.username, user.password).orElse(null);
-                if (authenticated==null){
-                    out.println(gson.toJson(new LoginResponse(false)));
-                    terminate=true;
-                }else{
-                    out.println(gson.toJson(new LoginResponse(true)));
-                }
-            }else if(firstRequest instanceof RegisterRequest){
-                RegisterRequest register =(RegisterRequest)firstRequest;
-                if (Register.register(register.username, register.password).isPresent()){
-                    out.println();
-                }
-            }
 
 
 
-
-
-            while(inScanner.hasNext() && !terminate){
-                String str = inScanner.next();
-                Request request= gson.fromJson(str, Request.class);
-                if (request instanceof LoginRequest){
-                    LoginRequest trueRequest = (LoginRequest)request;
-                    out.printf("Login Request Detected. %s, %s",  trueRequest.username, trueRequest.password);
-                }else if (request instanceof RunProgramRequest){
-                    RunProgramRequest trueRequest = (RunProgramRequest)request;
+            while (inScanner.hasNext() && !terminate) {
+                Request request = gson.fromJson(inScanner.next(), Request.class);
+                if (request instanceof RunProgramRequest) {
+                    RunProgramRequest trueRequest = (RunProgramRequest) request;
                     out.printf("%s. program is %s", trueRequest.type, trueRequest.program);
-                }else{
+                } else if (request instanceof TerminateConnectionRequest) {
+                    System.out.println("Terminating the connection.");
+                    terminate = true;
+                } else if (request instanceof TestConnectionRequest) {
+                    output(new TestConnectionResponse());
+                } else if (request instanceof LoginRequest) {
+                    LoginRequest user = (LoginRequest) request;
+                    currentUser = auth.authenticate(user.username, user.password).orElse(null);
+                    output(new LoginResponse(currentUser!=null, currentUser));
+                } else if (request instanceof RegisterRequest) {
+                    RegisterRequest register = (RegisterRequest) request;
+                    if (Register.register(register.username, register.password).isPresent()) {
+                        out.println();
+                    }
+                } else{
                     out.println("WRONG COMMAND");
                 }
-
             }
 
             inScanner.close();

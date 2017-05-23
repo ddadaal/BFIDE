@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.istack.internal.NotNull;
 import viccrubs.bfide.models.ConfiguredGson;
 import viccrubs.bfide.models.requests.Request;
+import viccrubs.bfide.models.requests.TerminateConnectionRequest;
 import viccrubs.bfide.models.response.Response;
 
 import java.io.Closeable;
@@ -44,8 +45,14 @@ public class Connection implements Closeable {
 
 
     @Override
-    public void close() throws IOException {
-        socket.close();
+    public void close() {
+        out.print(gson.toJson(new TerminateConnectionRequest()));
+        out.print("\r\n");
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

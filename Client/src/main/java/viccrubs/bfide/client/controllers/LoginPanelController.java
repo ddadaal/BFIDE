@@ -1,6 +1,5 @@
 package viccrubs.bfide.client.controllers;
 
-import com.sun.deploy.uitoolkit.impl.fx.ui.FXConsole;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,7 +7,10 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import viccrubs.bfide.client.models.Log;
 import viccrubs.bfide.client.socket.Connection;
+import viccrubs.bfide.models.requests.LoginRequest;
 import viccrubs.bfide.models.requests.TestConnectionRequest;
+import viccrubs.bfide.models.response.LoginResponse;
+import viccrubs.bfide.models.response.Response;
 import viccrubs.bfide.models.response.TestConnectionResponse;
 
 import java.io.IOException;
@@ -23,6 +25,10 @@ public class LoginPanelController {
     private final static String CONNECT = "Attempting to connect to ";
     private final static String CONNECTION_ESTABLISHED = "Connection established.";
     private final static String CONNECTION_FAILED = "Connection failed.";
+    private final static String CONNECTION_TERMINATED = "Connection terminated.";
+    private final static String LOGIN_STARTED = "Login started...";
+    private final static String LOGIN_SUCCESS = "Login success.";
+    private final static String LOGIN_FAILURE = "Login failure.";
 
     private Connection connection;
 
@@ -39,11 +45,11 @@ public class LoginPanelController {
     @FXML
     private TextField tfRegisterUsername;
     @FXML
-    private TextField tfRegisterPassword;
+    private PasswordField pfRegisterPassword;
     @FXML
     private TextField tfLoginUsername;
     @FXML
-    private TextField tfLoginPassword;
+    private PasswordField pfLoginPassword;
     @FXML
     private Text textStatus;
 
@@ -53,7 +59,7 @@ public class LoginPanelController {
         //TODO: Connect to Remote server
         btnConnect.setText("Connecting...");
         btnConnect.setDisable(true);
-
+        setEnableForm(false);
 
 
 
@@ -69,8 +75,9 @@ public class LoginPanelController {
 
             connection = new Connection(socket);
 
-            if (connection.sendRequest(new TestConnectionRequest()).equals(new TestConnectionResponse())){
-
+            Response response = connection.sendRequest(new TestConnectionRequest());
+            if (!(response instanceof TestConnectionResponse)){
+                throw new IOException();
             }
 
         } catch (IOException e) {
@@ -80,10 +87,38 @@ public class LoginPanelController {
             return;
         }
 
+        setEnableForm(true);
         btnConnect.setText("Connect");
         btnDisconnect.setDisable(false);
         addLog(CONNECTION_ESTABLISHED);
 
+    }
+
+    public void btnDisconnectOnClick(){
+        btnConnect.setDisable(false);
+        btnDisconnect.setDisable(true);
+        setEnableForm(false);
+        connection.close();
+        addLog(CONNECTION_TERMINATED);
+    }
+
+    public void setEnableForm(boolean enable){
+        btnRegister.setDisable(!enable);
+        btnLogin.setDisable(!enable);
+        tfLoginUsername.setDisable(!enable);
+        pfLoginPassword.setDisable(!enable);
+        pfRegisterPassword.setDisable(!enable);
+        tfRegisterUsername.setDisable(!enable);
+    }
+
+    public void login(){
+        addLog(LOGIN_STARTED);
+        LoginResponse res = (LoginResponse)connection.sendRequest(new LoginRequest(tfLoginUsername.getText(), pfLoginPassword.getText()));
+        if (res.success){
+            addLog(LOGIN_SUCCESS);
+        }else{
+            addLog(LOGIN_FAILURE);
+        }
     }
 
 

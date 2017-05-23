@@ -18,7 +18,8 @@ public enum RequestType {
     @SerializedName("RUN_PROGRAM")
     RunProgram,
     @SerializedName("TEST_CONNECTION")
-    TestConnection
-
+    TestConnection,
+    @SerializedName("TERMINATE_CONNECTION")
+    TerminateConnection
 }
 

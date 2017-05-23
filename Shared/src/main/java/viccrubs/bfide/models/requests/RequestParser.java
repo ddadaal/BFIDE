@@ -29,6 +29,8 @@ public class RequestParser implements JsonDeserializer<Request> {
                 return gson.fromJson(jsonElement, GetMachineStatesRequest.class);
             case TestConnection:
                 return gson.fromJson(jsonElement, TestConnectionRequest.class);
+            case TerminateConnection:
+                return gson.fromJson(jsonElement, TerminateConnectionRequest.class);
             default:
                 return null;
 
