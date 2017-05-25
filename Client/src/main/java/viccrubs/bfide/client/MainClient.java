@@ -4,19 +4,22 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import viccrubs.bfide.client.controllers.LoginPanelController;
 
 public class MainClient extends Application {
 
-    private Stage primaryStage;
+    private Stage mainStage;
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("IDE");
+        mainStage = primaryStage;
+        mainStage.setTitle("Login");
 
         initRootLayout();
 
@@ -31,23 +34,22 @@ public class MainClient extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/LoginPanel.fxml"));
 
+            LoginPanelController controller = loader.getController();
+            controller.setStage(mainStage);
+
             // Show the scene containing the root layout.
             Scene scene = new Scene(loader.load());
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            mainStage.setScene(scene);
+            mainStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    /**
-     * Returns the main stage.
-     * @return
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
+
+
+
 
     public static void main(String[] args) {
         launch(args);

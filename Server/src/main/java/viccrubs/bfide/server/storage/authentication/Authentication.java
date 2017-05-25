@@ -37,7 +37,7 @@ public class Authentication {
             Gson gson = new Gson();
 
             users = gson.fromJson(reader, User[].class);
-
+            reader.close();
 
 
         } catch (IOException e) {

@@ -5,11 +5,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import viccrubs.bfide.client.MainClient;
 import viccrubs.bfide.client.models.Log;
 import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.models.requests.LoginRequest;
+import viccrubs.bfide.models.requests.RegisterRequest;
 import viccrubs.bfide.models.requests.TestConnectionRequest;
 import viccrubs.bfide.models.response.LoginResponse;
+import viccrubs.bfide.models.response.RegisterResponse;
 import viccrubs.bfide.models.response.Response;
 import viccrubs.bfide.models.response.TestConnectionResponse;
 
@@ -19,7 +22,7 @@ import java.net.Socket;
 /**
  * Created by viccrubs on 2017/5/22.
  */
-public class LoginPanelController {
+public class LoginPanelController extends Controller {
 
 
     private final static String CONNECT = "Attempting to connect to ";
@@ -29,6 +32,9 @@ public class LoginPanelController {
     private final static String LOGIN_STARTED = "Login started...";
     private final static String LOGIN_SUCCESS = "Login success.";
     private final static String LOGIN_FAILURE = "Login failure.";
+    private final static String REGISTER_STARTED = "Register started...";
+    private final static String REGISTER_SUCCESS = "Register success.";
+    private final static String REGISTER_FAILURE = "Register failure.";
 
     private Connection connection;
 
@@ -118,6 +124,16 @@ public class LoginPanelController {
             addLog(LOGIN_SUCCESS);
         }else{
             addLog(LOGIN_FAILURE);
+        }
+    }
+
+    public void register(){
+        addLog(REGISTER_STARTED);
+        RegisterResponse res = (RegisterResponse)connection.sendRequest(new RegisterRequest(tfRegisterUsername.getText(), pfRegisterPassword.getText()));
+        if (res.success){
+            addLog(REGISTER_SUCCESS);
+        }else{
+            addLog(REGISTER_FAILURE);
         }
     }
 

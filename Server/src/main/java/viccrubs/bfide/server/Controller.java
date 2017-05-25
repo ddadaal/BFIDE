@@ -8,10 +8,7 @@ import viccrubs.bfide.models.ConfiguredGson;
 import viccrubs.bfide.models.ExecutionResult;
 import viccrubs.bfide.models.User;
 import viccrubs.bfide.models.requests.*;
-import viccrubs.bfide.models.response.LoginResponse;
-import viccrubs.bfide.models.response.Response;
-import viccrubs.bfide.models.response.ResponseParser;
-import viccrubs.bfide.models.response.TestConnectionResponse;
+import viccrubs.bfide.models.response.*;
 import viccrubs.bfide.server.storage.authentication.Authentication;
 import viccrubs.bfide.server.storage.authentication.Register;
 import viccrubs.bfide.utilities.DynamicInStream;
@@ -84,7 +81,9 @@ public class Controller implements Runnable {
                 } else if (request instanceof RegisterRequest) {
                     RegisterRequest register = (RegisterRequest) request;
                     if (Register.register(register.username, register.password).isPresent()) {
-                        out.println();
+                        output(new RegisterResponse(true));
+                    }else{
+                        output(new RegisterResponse(false));
                     }
                 } else{
                     out.println("WRONG COMMAND");

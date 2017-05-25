@@ -2,6 +2,7 @@ package viccrubs.bfide.server.storage.authentication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import viccrubs.bfide.models.ConfiguredGson;
 import viccrubs.bfide.models.User;
 import viccrubs.bfide.server.BFIDEServer;
 import viccrubs.bfide.server.Utils;
@@ -34,13 +35,14 @@ public class Register {
 
         User[] newUsers = Stream.concat(Arrays.stream(auth.getUsers()), Stream.of(newUser)).toArray(User[]::new);
 
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = ConfiguredGson.get();
         String newContent = gson.toJson(newUsers);
 
         try {
             File file = new File(Utils.getFileUri(Utils.pathCombine(Configurations.rootAuthenticationDirectory, Configurations.credentialFileName)));
             FileWriter writer = new FileWriter(file);
             writer.write(newContent);
+            writer.close();
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return Optional.empty();

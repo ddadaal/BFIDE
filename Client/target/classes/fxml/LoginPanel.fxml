@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 
 <AnchorPane prefHeight="351.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.LoginPanelController">
    <children>
@@ -26,21 +26,17 @@
       <AnchorPane layoutY="114.0" prefHeight="216.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0">
          <children>
             <Text layoutX="127.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register" AnchorPane.topAnchor="10.0" />
-            <TextField fx:id="tfRegisterUsername" layoutX="93.0" layoutY="41.0" />
-            <TextField fx:id="tfRegisterPassword" layoutX="93.0" layoutY="85.0" />
-            <Text layoutX="26.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-            <Text layoutX="26.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
-            <Button fx:id="btnRegister" layoutX="119.0" layoutY="145.0" mnemonicParsing="false" text="Register" />
+            <TextField fx:id="tfRegisterUsername" disable="true" layoutX="70.0" layoutY="39.0" promptText="Username" />
+            <Button fx:id="btnRegister" disable="true" layoutX="119.0" layoutY="145.0" mnemonicParsing="false" onMouseClicked="#register" text="Register" />
+            <PasswordField fx:id="pfRegisterPassword" disable="true" layoutX="70.0" layoutY="85.0" promptText="Password" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="308.0" layoutY="114.0" prefHeight="216.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Text layoutX="138.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" AnchorPane.topAnchor="10.0" />
-            <TextField fx:id="tfLoginUsername" layoutX="103.0" layoutY="41.0" />
-            <Text layoutX="36.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-            <TextField fx:id="tfLoginPassword" layoutX="103.0" layoutY="85.0" />
-            <Text layoutX="36.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
-            <Button fx:id="btnLogin" layoutX="123.0" layoutY="142.0" mnemonicParsing="false" onMouseClicked="#login" text="Login" />
+            <TextField fx:id="tfLoginUsername" disable="true" layoutX="74.0" layoutY="39.0" promptText="Username" />
+            <Button fx:id="btnLogin" disable="true" layoutX="123.0" layoutY="142.0" mnemonicParsing="false" onMouseClicked="#login" text="Login" />
+            <PasswordField fx:id="pfLoginPassword" disable="true" layoutX="74.0" layoutY="85.0" promptText="Password" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="-1.0" layoutY="240.0" prefHeight="31.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0">
