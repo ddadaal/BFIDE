@@ -11,32 +11,46 @@ public class BFMachineStates {
     @Expose
     public int maxDataArrayLength = 256;
     @Expose
-    public char instruction=0;
+    public Instruction instruction;
+    @Expose
+    public int lineCounter;
+    @Expose
+    public int instructionCounter;
     @Expose
     public int programCounter =0;
-
-    @Expose
-    public int charCounter=0;
-    @Expose
-    public int lineCounter=0;
     @Expose
     public byte[] array = new byte[maxDataArrayLength];
     @Expose
     public int arrayPointer =0;
     @Expose
     public Stack<Integer> cycleStack = new Stack<Integer>();
+    public Program program;
     @Expose
-    public String program;
+    public String programInString;
+    @Expose
+    public String input;
+    @Expose
+    public StringBuilder output;
+    @Expose
+    public int inputReader;
 
+
+    public void setProgram(Program program){
+        this.program = program;
+        this.programInString = program.toString();
+    }
 
     public void reset(){
-        instruction=0;
+        instruction=null;
         arrayPointer = 0;
         for(int i=0;i<maxDataArrayLength;i++){
             array[i] = 0;
         }
         cycleStack.clear();
         programCounter = 0;
+        input = "";
+        output = new StringBuilder();
+        inputReader = 0;
     }
 
 }

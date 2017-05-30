@@ -16,11 +16,11 @@ public class BFMachineException extends Exception{
     }
 
     protected String position(){
-        return String.format("at line %d char %d", machine.lineCounter, machine.charCounter);
+        return String.format("at line %d char %d", machine.lineCounter, machine.instructionCounter);
     }
 
     @Override
     public String toString(){
-        return String.format("%s occurred when processing \"%c\" %s.", exceptionName, machine.instruction, position());
+        return String.format("%s occurred when processing \"%s\" %s.", exceptionName, machine.instruction.toString(), position());
     }
 }

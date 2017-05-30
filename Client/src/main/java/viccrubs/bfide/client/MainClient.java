@@ -11,6 +11,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import viccrubs.bfide.client.controllers.LoginPanelController;
+import viccrubs.bfide.client.log.ApplicationLog;
+import viccrubs.bfide.client.models.Log;
+import viccrubs.bfide.models.response.LoginResponse;
 
 public class MainClient extends Application {
 
@@ -30,16 +33,16 @@ public class MainClient extends Application {
      */
     public void initRootLayout() {
         try {
+            new ApplicationLog().addLog(new Log("App started."));
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/LoginPanel.fxml"));
-
-            LoginPanelController controller = loader.getController();
-            controller.setStage(mainStage);
-
             // Show the scene containing the root layout.
             Scene scene = new Scene(loader.load());
+            LoginPanelController controller = loader.getController();
+            controller.setStage(mainStage);
             mainStage.setScene(scene);
+
             mainStage.show();
         } catch (IOException e) {
             e.printStackTrace();

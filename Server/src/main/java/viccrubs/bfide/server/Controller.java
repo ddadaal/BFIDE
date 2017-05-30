@@ -28,17 +28,12 @@ public class Controller implements Runnable {
     private BFMachine machine;
     private PrintStream out;
     private Scanner inScanner;
-    private DynamicInStream machineInStream;
-    private DynamicOutStream machineOutStream;
     private Gson gson;
     private User currentUser;
 
     public Controller(Socket client){
         this.client = client;
         this.gson = ConfiguredGson.get();
-        this.machineInStream = new DynamicInStream();
-        this.machineOutStream = new DynamicOutStream();
-
     }
 
     public void output(Response res){
@@ -68,9 +63,15 @@ public class Controller implements Runnable {
                 Request request = gson.fromJson(inScanner.next(), Request.class);
                 if (request instanceof RunProgramRequest) {
                     RunProgramRequest trueRequest = (RunProgramRequest) request;
-                    out.printf("%s. program is %s", trueRequest.type, trueRequest.program);
+                    if (currentUser==null){
+                        output(new RequireLoginResponse());
+                    }else{
+                        ExecutionResult result = machine.execute(Program.translateProgram(trueRequest.program, trueRequest.language), trueRequest.input);
+                        output(new RunResultResponse(result));
+                    }
                 } else if (request instanceof TerminateConnectionRequest) {
                     System.out.println("Terminating the connection.");
+                    output(new TerminateConnectionResponse());
                     terminate = true;
                 } else if (request instanceof TestConnectionRequest) {
                     output(new TestConnectionResponse());
@@ -78,6 +79,9 @@ public class Controller implements Runnable {
                     LoginRequest user = (LoginRequest) request;
                     currentUser = auth.authenticate(user.username, user.password).orElse(null);
                     output(new LoginResponse(currentUser!=null, currentUser));
+                    if (currentUser!=null){
+                        machine = new BFMachine();
+                    }
                 } else if (request instanceof RegisterRequest) {
                     RegisterRequest register = (RegisterRequest) request;
                     if (Register.register(register.username, register.password).isPresent()) {

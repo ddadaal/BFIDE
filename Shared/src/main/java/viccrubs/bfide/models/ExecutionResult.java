@@ -11,9 +11,12 @@ public class ExecutionResult {
     public final BFMachineException exception;
     @Expose
     public final String output;
+    @Expose
+    public final long executionTime; // in milliseconds
 
-    public ExecutionResult(BFMachineException exception, String output) {
+    public ExecutionResult(String output, BFMachineException exception,  long executionTime) {
         this.exception = exception;
         this.output = output;
+        this.executionTime = executionTime;
     }
 }

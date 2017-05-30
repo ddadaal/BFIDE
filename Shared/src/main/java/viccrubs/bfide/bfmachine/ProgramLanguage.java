@@ -1,4 +1,4 @@
-package viccrubs.bfide.models;
+package viccrubs.bfide.bfmachine;
 
 import com.google.gson.annotations.SerializedName;
 

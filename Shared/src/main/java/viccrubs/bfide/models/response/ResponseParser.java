@@ -22,14 +22,16 @@ public class ResponseParser implements JsonDeserializer<Response> {
         switch(baseResponse.type){
             case LoginResponse:
                 return gson.fromJson(jsonElement, LoginResponse.class);
-            case RequestInput:
-                return gson.fromJson(jsonElement, RequestInputResponse.class);
+            case RequireLogin:
+                return gson.fromJson(jsonElement, RequireLoginResponse.class);
             case RegisterResponse:
                 return gson.fromJson(jsonElement, RegisterResponse.class);
             case RunResult:
                 return gson.fromJson(jsonElement, RunResultResponse.class);
             case TestConnection:
                 return gson.fromJson(jsonElement, TestConnectionResponse.class);
+            case TerminateConnection:
+                return gson.fromJson(jsonElement, TerminateConnectionResponse.class);
             default:
                 return null;
 

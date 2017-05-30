@@ -12,8 +12,10 @@ public enum ResponseType {
     RegisterResponse,
     @SerializedName("RUN_RESULT")
     RunResult,
-    @SerializedName("REQUEST_INPUT")
-    RequestInput,
+    @SerializedName("REQUIRE_LOGIN")
+    RequireLogin,
     @SerializedName("TEST_CONNECTION")
-    TestConnection
+    TestConnection,
+    @SerializedName("TERMINATE_CONNECTION")
+    TerminateConnection
 }

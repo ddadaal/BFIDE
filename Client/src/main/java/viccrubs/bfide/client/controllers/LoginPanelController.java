@@ -2,11 +2,19 @@ package viccrubs.bfide.client.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import viccrubs.bfide.client.MainClient;
+import viccrubs.bfide.client.log.ApplicationLog;
 import viccrubs.bfide.client.models.Log;
+import viccrubs.bfide.client.models.LogType;
 import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.models.requests.LoginRequest;
 import viccrubs.bfide.models.requests.RegisterRequest;
@@ -22,7 +30,7 @@ import java.net.Socket;
 /**
  * Created by viccrubs on 2017/5/22.
  */
-public class LoginPanelController extends Controller {
+public class LoginPanelController {
 
 
     private final static String CONNECT = "Attempting to connect to ";
@@ -37,6 +45,11 @@ public class LoginPanelController extends Controller {
     private final static String REGISTER_FAILURE = "Register failure.";
 
     private Connection connection;
+    private Stage appStage;
+
+    public void setStage(Stage stage){
+        appStage = stage;
+    }
 
     @FXML
     private TextField tfIP;
@@ -58,8 +71,15 @@ public class LoginPanelController extends Controller {
     private PasswordField pfLoginPassword;
     @FXML
     private Text textStatus;
+    @FXML
+    private Hyperlink linkAbout;
 
-    private ObservableList<Log> logs = FXCollections.observableArrayList();
+    private ApplicationLog appLog = new ApplicationLog();
+
+    @FXML
+    public void initialize(){
+        textStatus.setText(appLog.getLogList().get(appLog.getLogList().size()-1).getDescription());
+    }
 
     public void btnConnectOnClick(){
         //TODO: Connect to Remote server
@@ -69,12 +89,14 @@ public class LoginPanelController extends Controller {
 
 
 
+
+
         String[] ipAndPort = tfIP.getText().split(":");
 
         String ip = ipAndPort[0];
         int port = Integer.parseInt(ipAndPort[1]);
 
-        addLog(CONNECT+tfIP.getText());
+        addLog(CONNECT+tfIP.getText()+"...");
 
         try {
             Socket socket = new Socket(ip,port);
@@ -87,7 +109,7 @@ public class LoginPanelController extends Controller {
             }
 
         } catch (IOException e) {
-            addLog(CONNECTION_FAILED);
+            addLog(CONNECTION_FAILED, LogType.Error);
             btnConnect.setText("Connect");
             btnConnect.setDisable(false);
             return;
@@ -96,7 +118,7 @@ public class LoginPanelController extends Controller {
         setEnableForm(true);
         btnConnect.setText("Connect");
         btnDisconnect.setDisable(false);
-        addLog(CONNECTION_ESTABLISHED);
+        addLog(CONNECTION_ESTABLISHED, LogType.Success);
 
     }
 
@@ -121,9 +143,23 @@ public class LoginPanelController extends Controller {
         addLog(LOGIN_STARTED);
         LoginResponse res = (LoginResponse)connection.sendRequest(new LoginRequest(tfLoginUsername.getText(), pfLoginPassword.getText()));
         if (res.success){
-            addLog(LOGIN_SUCCESS);
+            addLog(LOGIN_SUCCESS, LogType.Success);
+            try {
+                FXMLLoader loader = new FXMLLoader(MainClient.class.getResource("/fxml/MainWindow.fxml"));
+                Scene scene = new Scene(loader.load());
+                MainWindowController controller = loader.getController();
+                controller.setUser(res.user);
+                controller.setConnection(connection);
+                controller.setStage(appStage);
+                appStage.setScene(scene);
+                appStage.sizeToScene();
+                appStage.setTitle("BF/Ook IDE");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else{
-            addLog(LOGIN_FAILURE);
+            addLog(LOGIN_FAILURE, LogType.Error);
         }
     }
 
@@ -131,19 +167,29 @@ public class LoginPanelController extends Controller {
         addLog(REGISTER_STARTED);
         RegisterResponse res = (RegisterResponse)connection.sendRequest(new RegisterRequest(tfRegisterUsername.getText(), pfRegisterPassword.getText()));
         if (res.success){
-            addLog(REGISTER_SUCCESS);
+            addLog(REGISTER_SUCCESS, LogType.Success);
         }else{
-            addLog(REGISTER_FAILURE);
+            addLog(REGISTER_FAILURE, LogType.Error);
         }
     }
 
 
-
+    public void showLogs(){
+        appLog.showLogViewer();
+    }
 
 
     public void addLog(String log){
-        logs.add(new Log(log));
+        addLog(log, LogType.Notification);
+    }
+
+    public void addLog(String log, LogType type){
+        appLog.addLog(new Log(log, type));
         textStatus.setText(log);
+    }
+
+    public void openAbout(){
+        AboutController.open();
     }
 
 

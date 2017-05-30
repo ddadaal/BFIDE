@@ -1,7 +1,6 @@
 package viccrubs.bfide.models.requests;
 
-import com.google.gson.annotations.Expose;
-import viccrubs.bfide.models.ProgramLanguage;
+import viccrubs.bfide.bfmachine.ProgramLanguage;
 
 /**
  * Created by viccrubs on 2017/5/9.
@@ -9,12 +8,12 @@ import viccrubs.bfide.models.ProgramLanguage;
 public class RunProgramRequest extends Request {
 
     public final String program;
-
+    public final String input;
     public final ProgramLanguage language;
 
-    public RunProgramRequest(String program, ProgramLanguage language) {
+    public RunProgramRequest(String program, String input, ProgramLanguage language) {
         this.program = program;
-
+        this.input = input;
         this.language = language;
         this.type = RequestType.RunProgram;
     }

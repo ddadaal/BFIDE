@@ -41,8 +41,9 @@
       </AnchorPane>
       <AnchorPane layoutX="-1.0" layoutY="240.0" prefHeight="31.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0">
          <children>
-            <Text fx:id="textStatus" layoutX="2.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ready" />
+            <Text fx:id="textStatus" layoutX="2.0" layoutY="22.0" onMouseClicked="#showLogs" strokeType="OUTSIDE" strokeWidth="0.0" text="Ready" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
          </children>
       </AnchorPane>
+      <Hyperlink fx:id="linkAbout" layoutX="526.0" layoutY="12.0" onMouseClicked="#openAbout" text="About" />
    </children>
 </AnchorPane>
