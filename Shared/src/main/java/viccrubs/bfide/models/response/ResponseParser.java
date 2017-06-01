@@ -2,10 +2,7 @@ package viccrubs.bfide.models.response;
 
 import com.google.gson.*;
 import viccrubs.bfide.models.ExecutionResult;
-import viccrubs.bfide.models.requests.LoginRequest;
-import viccrubs.bfide.models.requests.RegisterRequest;
-import viccrubs.bfide.models.requests.Request;
-import viccrubs.bfide.models.requests.RunProgramRequest;
+import viccrubs.bfide.models.requests.*;
 
 import java.lang.reflect.Type;
 
@@ -32,6 +29,12 @@ public class ResponseParser implements JsonDeserializer<Response> {
                 return gson.fromJson(jsonElement, TestConnectionResponse.class);
             case "TerminateConnection":
                 return gson.fromJson(jsonElement, TerminateConnectionResponse.class);
+            case "GetProjectInfo":
+                return gson.fromJson(jsonElement, GetProjectInfoResponse.class);
+            case "CreateNewProject":
+                return gson.fromJson(jsonElement, CreateNewProjectResponse.class);
+            case "SaveVersion":
+                return gson.fromJson(jsonElement, SaveVersionResponse.class);
             default:
                 return baseResponse;
 

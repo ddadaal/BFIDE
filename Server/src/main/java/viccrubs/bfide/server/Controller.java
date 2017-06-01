@@ -4,11 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import viccrubs.bfide.bfmachine.*;
-import viccrubs.bfide.models.ConfiguredGson;
-import viccrubs.bfide.models.ExecutionResult;
-import viccrubs.bfide.models.User;
+import viccrubs.bfide.models.*;
 import viccrubs.bfide.models.requests.*;
 import viccrubs.bfide.models.response.*;
+import viccrubs.bfide.server.storage.UserManager;
 import viccrubs.bfide.server.storage.authentication.Authentication;
 import viccrubs.bfide.server.storage.authentication.Register;
 import viccrubs.bfide.utilities.DynamicInStream;
@@ -28,6 +27,7 @@ public class Controller implements Runnable {
     private BFMachine machine;
     private PrintStream out;
     private Scanner inScanner;
+    private UserManager userManager;
     private Gson gson;
     private User currentUser;
 
@@ -81,6 +81,7 @@ public class Controller implements Runnable {
                     output(new LoginResponse(currentUser!=null, currentUser));
                     if (currentUser!=null){
                         machine = new BFMachine();
+                        userManager = new UserManager(currentUser);
                     }
                 } else if (request instanceof RegisterRequest) {
                     RegisterRequest register = (RegisterRequest) request;
@@ -89,7 +90,35 @@ public class Controller implements Runnable {
                     }else{
                         output(new RegisterResponse(false));
                     }
-                } else{
+                } else if (request instanceof GetProjectInfoRequest){
+                    GetProjectInfoRequest trueRequest = (GetProjectInfoRequest)request;
+                    if (!userManager.projectExists(trueRequest.projectName)){
+                        output(new GetProjectInfoResponse(null));
+                    }else{
+                        output(new GetProjectInfoResponse(userManager.getProjectInfo(trueRequest.projectName)));
+                    }
+                } else if (request instanceof SaveVersionRequest){
+                    SaveVersionRequest trueRequest = (SaveVersionRequest)request;
+                    Version latestVersion = userManager.getLatestVersionOfAProject(trueRequest.projectName);
+                    String oldContent = userManager.getContentOfAVersion(trueRequest.projectName, userManager.getLatestVersionOfAProject(trueRequest.projectName));
+                    if (trueRequest.content.equals(oldContent)){
+                        output(new SaveVersionResponse(false, latestVersion));
+                    }else{
+                        latestVersion = userManager.createNewVersion(trueRequest.projectName, trueRequest.content, new Version(trueRequest.timestamp));
+                        output(new SaveVersionResponse(true, latestVersion));
+                    }
+                } else if (request instanceof CreateNewProjectRequest){
+                    CreateNewProjectRequest trueRequest = (CreateNewProjectRequest)request;
+                    if (userManager.projectExists(trueRequest.projectName)){
+                        output(new CreateNewProjectResponse(false,null));
+                        continue;
+                    }
+
+                    ProjectInfo info = userManager.createNewProject(trueRequest.projectName, trueRequest.language);
+                    output(new CreateNewProjectResponse(info==null,info));
+                }
+
+                else{
                     out.println("WRONG COMMAND");
                 }
             }

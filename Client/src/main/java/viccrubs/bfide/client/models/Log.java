@@ -2,6 +2,7 @@ package viccrubs.bfide.client.models;
 
 import javafx.beans.property.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 /**
@@ -12,21 +13,21 @@ public class Log {
 
 
     private final StringProperty description;
-    private final ObjectProperty<LocalDateTime> time;
+    private final ObjectProperty<Instant> time;
 
-    public Log(String description, LocalDateTime time, LogType type) {
+    public Log(String description, Instant time, LogType type) {
         this.description =new SimpleStringProperty( description);
         this.time = new SimpleObjectProperty<>(time);
         this.type = new SimpleObjectProperty<>(type);
     }
 
     public Log(String description){
-        this(description, LocalDateTime.now(), LogType.Notification);
+        this(description, Instant.now(), LogType.Notification);
     }
 
 
     public Log(String description, LogType type){
-        this(description, LocalDateTime.now(), type);
+        this(description, Instant.now(), type);
     }
 
 
@@ -42,15 +43,15 @@ public class Log {
         this.description.set(description);
     }
 
-    public LocalDateTime getTime() {
+    public Instant getTime() {
         return time.get();
     }
 
-    public ObjectProperty<LocalDateTime> timeProperty() {
+    public ObjectProperty<Instant> timeProperty() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(Instant time) {
         this.time.set(time);
     }
 

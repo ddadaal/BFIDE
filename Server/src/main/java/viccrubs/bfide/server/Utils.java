@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
  */
 public class Utils {
 
-    public static String downloadContent(String filePath) throws IOException {
-        URL url = BFIDEServer.class.getResource(filePath);
+    public static String downloadContent(String relativeFilePath) throws IOException {
+        URL url = BFIDEServer.class.getResource(relativeFilePath);
 
         Scanner scanner = new Scanner(url.openStream());
         StringBuilder result = new StringBuilder();
@@ -28,15 +28,20 @@ public class Utils {
         return result.toString();
     }
 
+
     public static String pathCombine(String... paths)
     {
         return Arrays.stream(paths).collect(Collectors.joining("/"));
     }
 
     public static URI getFileUri(String filePath) throws URISyntaxException {
-        return BFIDEServer.class.getResource(filePath).toURI();
+        URL a= BFIDEServer.class.getResource(filePath);
+        if (a==null){
+            return null;
+        }else{
+            return a.toURI();
+        }
     }
-
     public static <T> T[] concat(T[] first, T[] second) {
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
