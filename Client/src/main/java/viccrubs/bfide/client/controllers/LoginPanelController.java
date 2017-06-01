@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -79,7 +80,32 @@ public class LoginPanelController {
     @FXML
     public void initialize(){
         textStatus.setText(appLog.getLogList().get(appLog.getLogList().size()-1).getDescription());
+        tfLoginUsername.setOnKeyPressed(x->{
+            if (x.getCode().equals(KeyCode.TAB)){
+                pfLoginPassword.requestFocus();
+            }else if (x.getCode().equals(KeyCode.ENTER)){
+                login();
+            }
+        });
+        pfLoginPassword.setOnKeyPressed(x->{
+            if (x.getCode().equals(KeyCode.ENTER)){
+                login();
+            }
+        });
+        tfRegisterUsername.setOnKeyPressed(x->{
+            if (x.getCode().equals(KeyCode.TAB)){
+                pfRegisterPassword.requestFocus();
+            }else if (x.getCode().equals(KeyCode.ENTER)){
+                register();
+            }
+        });
+        pfRegisterPassword.setOnKeyPressed(x->{
+            if (x.getCode().equals(KeyCode.ENTER)){
+                register();
+            }
+        });
     }
+
 
     public void btnConnectOnClick(){
         //TODO: Connect to Remote server

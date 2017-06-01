@@ -9,6 +9,5 @@ public class RegisterResponse extends Response {
 
     public RegisterResponse(boolean success){
         this.success= success;
-        this.type = ResponseType.RegisterResponse;
     }
 }

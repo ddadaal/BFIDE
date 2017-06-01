@@ -6,12 +6,11 @@ import viccrubs.bfide.models.ExecutionResult;
 /**
  * Created by viccrubs on 2017/5/10.
  */
-public class RunResultResponse extends Response {
+public class ExecutionResponse extends Response {
     public final ExecutionResult result;
 
 
-    public RunResultResponse(ExecutionResult result) {
-        this.type = ResponseType.RunResult;
+    public ExecutionResponse(ExecutionResult result) {
         this.result = result;
     }
 }

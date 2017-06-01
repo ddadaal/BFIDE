@@ -9,7 +9,6 @@ public class InputRequest extends Request {
 
     public InputRequest(String input) {
         this.input = input;
-        this.type = RequestType.Input;
 
     }
 }

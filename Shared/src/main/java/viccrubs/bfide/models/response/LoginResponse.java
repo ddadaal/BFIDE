@@ -14,7 +14,6 @@ public class LoginResponse extends Response {
     public LoginResponse(boolean success, User user) {
         this.success = success;
         this.user = user;
-        this.type = ResponseType.LoginResponse;
     }
 
 }

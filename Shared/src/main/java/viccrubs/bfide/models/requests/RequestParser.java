@@ -4,8 +4,6 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-import static viccrubs.bfide.models.requests.RequestType.*;
-
 /**
  * Created by viccrubs on 2017/5/9.
  */
@@ -16,23 +14,21 @@ public class RequestParser implements JsonDeserializer<Request> {
 
         Request baseRequest = gson.fromJson(jsonElement, Request.class);
 
-        switch(baseRequest.type){
-            case Login:
+        switch(baseRequest.type.replace("Request","")){
+            case "Login":
                 return gson.fromJson(jsonElement, LoginRequest.class);
-            case RunProgram:
-                return gson.fromJson(jsonElement, RunProgramRequest.class);
-            case Input:
-                return gson.fromJson(jsonElement, InputRequest.class);
-            case Register:
+            case "Register":
                 return gson.fromJson(jsonElement, RegisterRequest.class);
-            case GetMachineStates:
+            case "GetMachineStates":
                 return gson.fromJson(jsonElement, GetMachineStatesRequest.class);
-            case TestConnection:
+            case "TestConnection":
                 return gson.fromJson(jsonElement, TestConnectionRequest.class);
-            case TerminateConnection:
+            case "TerminateConnection":
                 return gson.fromJson(jsonElement, TerminateConnectionRequest.class);
+            case "RunProgram":
+                return gson.fromJson(jsonElement, RunProgramRequest.class);
             default:
-                return null;
+                return baseRequest;
 
         }
     }

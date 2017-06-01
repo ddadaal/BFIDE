@@ -30,7 +30,7 @@ public class Utils {
 
     public static String pathCombine(String... paths)
     {
-        return Arrays.stream(paths).collect(Collectors.joining("/")).toString();
+        return Arrays.stream(paths).collect(Collectors.joining("/"));
     }
 
     public static URI getFileUri(String filePath) throws URISyntaxException {

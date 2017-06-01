@@ -16,9 +16,6 @@ public class AboutController {
 
     @FXML
     private Hyperlink linkHomepage;
-    @FXML
-    private Hyperlink linkContacts;
-
     public static void open(){
         try {
             Stage stage= new Stage();
@@ -46,11 +43,8 @@ public class AboutController {
             if (dp.isSupported(java.awt.Desktop.Action.BROWSE)) {
                 dp.browse(uri);
             }
-        } catch (java.lang.NullPointerException e) {
+        } catch (NullPointerException | IOException e) {
             // 此为uri为空时抛出异常
-            e.printStackTrace();
-        } catch (java.io.IOException e) {
-            // 此为无法获取系统默认浏览器
             e.printStackTrace();
         }
     }

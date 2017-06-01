@@ -67,7 +67,7 @@ public class Controller implements Runnable {
                         output(new RequireLoginResponse());
                     }else{
                         ExecutionResult result = machine.execute(Program.translateProgram(trueRequest.program, trueRequest.language), trueRequest.input);
-                        output(new RunResultResponse(result));
+                        output(new ExecutionResponse(result));
                     }
                 } else if (request instanceof TerminateConnectionRequest) {
                     System.out.println("Terminating the connection.");

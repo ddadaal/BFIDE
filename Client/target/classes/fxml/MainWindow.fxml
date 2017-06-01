@@ -40,7 +40,6 @@
       <AnchorPane layoutY="308.0" prefHeight="208.0" prefWidth="611.0">
          <children>
             <Text layoutX="429.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output" />
-            <Button layoutX="128.0" layoutY="169.0" mnemonicParsing="false" text="Send" />
             <TextArea fx:id="textInput" layoutY="40.0" prefHeight="129.0" prefWidth="300.0" />
             <TextArea fx:id="textOutput" editable="false" layoutX="308.0" layoutY="40.0" prefHeight="129.0" prefWidth="300.0" />
             <Text layoutX="129.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input" />
@@ -48,12 +47,13 @@
       </AnchorPane>
       <AnchorPane layoutY="25.0" prefHeight="35.0" prefWidth="608.0">
          <children>
-            <Button fx:id="btnRun" layoutX="8.0" layoutY="6.0" mnemonicParsing="false" text="Run" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="btnRun" layoutX="8.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#executeProgram" text="Run" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <MenuButton fx:id="userButton" layoutX="503.0" layoutY="3.0" mnemonicParsing="false" text="Username" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" />
               </items>
             </MenuButton>
+            <Button fx:id="btnRunWithoutInput" layoutX="58.0" layoutY="6.0" mnemonicParsing="false" text="Run without Input" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="548.0" prefHeight="25.0" prefWidth="611.0" AnchorPane.bottomAnchor="0.0">

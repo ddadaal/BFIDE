@@ -17,5 +17,16 @@ public class Configurations {
     public final static String rootAuthenticationDirectory = "/authentication";
     public final static String credentialFileName = "credentials.json";
 
-
 }
+
+
+/*file structure
+authentication
+    credentials.json   //save all the usernames and passwords
+users
+    {user's uuid} //123
+        {filename.ext}  //1.bf
+            {time of version} //20170601152004
+
+
+*/

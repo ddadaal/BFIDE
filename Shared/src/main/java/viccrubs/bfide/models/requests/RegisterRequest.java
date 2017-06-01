@@ -11,6 +11,5 @@ public class RegisterRequest extends Request {
     public RegisterRequest(String username, String password) {
         this.username = username;
         this.password = password;
-        this.type = RequestType.Register;
     }
 }

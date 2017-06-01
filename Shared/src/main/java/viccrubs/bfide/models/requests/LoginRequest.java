@@ -15,6 +15,5 @@ public class LoginRequest extends Request {
     public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
-        this.type = RequestType.Login;
     }
 }

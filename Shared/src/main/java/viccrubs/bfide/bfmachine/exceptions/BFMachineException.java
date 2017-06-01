@@ -9,7 +9,7 @@ public class BFMachineException extends Exception{
     protected BFMachineStates machine;
 
     @Expose
-    protected final String exceptionName = this.getClass().getSimpleName();
+    public final String exceptionName = this.getClass().getSimpleName();
 
     public BFMachineException(BFMachineStates states){
         machine = states;

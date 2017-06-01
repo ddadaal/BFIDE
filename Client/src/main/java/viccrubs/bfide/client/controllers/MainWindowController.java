@@ -16,7 +16,7 @@ import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.bfmachine.ProgramLanguage;
 import viccrubs.bfide.models.User;
 import viccrubs.bfide.models.requests.RunProgramRequest;
-import viccrubs.bfide.models.response.RunResultResponse;
+import viccrubs.bfide.models.response.ExecutionResponse;
 
 import java.io.IOException;
 
@@ -65,12 +65,16 @@ public class MainWindowController  {
     private ApplicationLog appLog = new ApplicationLog();
     private Stage appStage;
 
+    private String lastSavedContent;
+
 
     @FXML
     private MenuButton userButton;
 
     @FXML
     private Button btnRun;
+    @FXML
+    private Button btnRunWithoutInput;
 
     @FXML
     private TextArea textCode;
@@ -130,10 +134,28 @@ public class MainWindowController  {
         }
     }
 
-    public void executeProgram(){
-        RunProgramRequest request = new RunProgramRequest(textCode.getText(), textInput.getText(), language);
-        RunResultResponse response = (RunResultResponse)connection.sendRequest(request);
-        textOutput.setText(response.result.output);
+    public void onRunClicked(){
+        executeProgram(textInput.getText());
+    }
+
+    public void executeProgram(String input){
+        RunProgramRequest request = new RunProgramRequest(textCode.getText(), input, language);
+        ExecutionResponse response = (ExecutionResponse)connection.sendRequest(request);
+        if (response.result.exception != null){
+            addLog(response.result.exception.exceptionName, LogType.Error);
+            textOutput.setText("Exception "+response.result.exception.exceptionName+" occurred.\n");
+        }else{
+            textOutput.setText(response.result.output);
+        }
+
+    }
+
+    public void onRunWithoutInputClicked(){
+        executeProgram("");
+    }
+
+    public void save(){
+
     }
 
     public void openAbout(){

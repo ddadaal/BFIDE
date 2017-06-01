@@ -10,7 +10,6 @@ public class GetMachineStatesRequest extends Request {
     public final BFMachineStates states;
 
     public GetMachineStatesRequest(BFMachineStates states) {
-        this.type = RequestType.GetMachineStates;
         this.states = states;
     }
 }

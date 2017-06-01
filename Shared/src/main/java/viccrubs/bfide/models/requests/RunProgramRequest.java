@@ -15,6 +15,5 @@ public class RunProgramRequest extends Request {
         this.program = program;
         this.input = input;
         this.language = language;
-        this.type = RequestType.RunProgram;
     }
 }

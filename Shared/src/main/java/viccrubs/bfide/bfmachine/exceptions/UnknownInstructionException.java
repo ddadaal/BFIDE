@@ -13,7 +13,7 @@ public class UnknownInstructionException extends BFMachineException {
     }
     @Override
     public String toString(){
-        return String.format("Unknown instruction \"%c\" %s.",machine.instruction, position());
+        return String.format("Unknown instruction \"%s\" %s.",machine.instruction, position());
     }
 
 }
