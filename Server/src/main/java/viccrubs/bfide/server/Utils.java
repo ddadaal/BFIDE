@@ -1,13 +1,10 @@
 package viccrubs.bfide.server;
 
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Scanner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -21,6 +18,15 @@ public class Utils {
         URL url = BFIDEServer.class.getResource(relativeFilePath);
 
         Scanner scanner = new Scanner(url.openStream());
+        StringBuilder result = new StringBuilder();
+        while(scanner.hasNextLine()){
+            result.append(scanner.nextLine()).append(System.lineSeparator());
+        }
+        return result.toString();
+    }
+
+    public static String downloadContentViaAbsolutePath(String absoluteFilePath) throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(absoluteFilePath));
         StringBuilder result = new StringBuilder();
         while(scanner.hasNextLine()){
             result.append(scanner.nextLine()).append(System.lineSeparator());

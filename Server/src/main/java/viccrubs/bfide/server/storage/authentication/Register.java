@@ -29,7 +29,6 @@ public class Register {
         }
 
         User newUser = new User();
-        newUser.uuid = UUID.randomUUID().toString();
         newUser.username = username;
         newUser.password = password;
 

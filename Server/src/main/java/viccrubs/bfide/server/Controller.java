@@ -87,6 +87,7 @@ public class Controller implements Runnable {
                     RegisterRequest register = (RegisterRequest) request;
                     if (Register.register(register.username, register.password).isPresent()) {
                         output(new RegisterResponse(true));
+                        auth.updateUsers();
                     }else{
                         output(new RegisterResponse(false));
                     }
@@ -97,25 +98,29 @@ public class Controller implements Runnable {
                     }else{
                         output(new GetProjectInfoResponse(userManager.getProjectInfo(trueRequest.projectName)));
                     }
-                } else if (request instanceof SaveVersionRequest){
-                    SaveVersionRequest trueRequest = (SaveVersionRequest)request;
-                    Version latestVersion = userManager.getLatestVersionOfAProject(trueRequest.projectName);
-                    String oldContent = userManager.getContentOfAVersion(trueRequest.projectName, userManager.getLatestVersionOfAProject(trueRequest.projectName));
-                    if (trueRequest.content.equals(oldContent)){
-                        output(new SaveVersionResponse(false, latestVersion));
-                    }else{
-                        latestVersion = userManager.createNewVersion(trueRequest.projectName, trueRequest.content, new Version(trueRequest.timestamp));
+                } else if (request instanceof NewVersionRequest){
+                    NewVersionRequest trueRequest = (NewVersionRequest)request;
+                    ProjectInfo info = userManager.getProjectInfo(trueRequest.projectName);
+                    if (info==null){
+                        output(new SaveVersionResponse(false,null));
+                        continue;
+                    }
+                    Version latestVersion = info.latestVersion;
+                    String latestContent = userManager.getContentOfAVersion(info,latestVersion).trim();
+                    if (latestVersion == null || !trueRequest.content.equals(latestContent)){
+                        latestVersion = userManager.createNewVersion(info, trueRequest.content, new Version(trueRequest.timestamp));
                         output(new SaveVersionResponse(true, latestVersion));
+                    }else {
+                        output(new SaveVersionResponse(false, latestVersion));
                     }
                 } else if (request instanceof CreateNewProjectRequest){
                     CreateNewProjectRequest trueRequest = (CreateNewProjectRequest)request;
                     if (userManager.projectExists(trueRequest.projectName)){
                         output(new CreateNewProjectResponse(false,null));
-                        continue;
+                    }else{
+                        ProjectInfo info = userManager.createNewProject(trueRequest.projectName, trueRequest.language);
+                        output(new CreateNewProjectResponse(info==null,info));
                     }
-
-                    ProjectInfo info = userManager.createNewProject(trueRequest.projectName, trueRequest.language);
-                    output(new CreateNewProjectResponse(info==null,info));
                 }
 
                 else{

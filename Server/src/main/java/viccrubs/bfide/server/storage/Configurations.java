@@ -17,7 +17,7 @@ public class Configurations {
     public final static String rootAuthenticationDirectory = "/authentication";
     public final static String credentialFileName = "credentials.json";
     public static String rootUserDirectoryAbsolutePath(){
-        return BFIDEServer.class.getResource(rootUserDirectory).toString();
+        return BFIDEServer.class.getResource(rootUserDirectory).getPath().substring(1);
     }
 }
 

@@ -6,6 +6,7 @@ package viccrubs.bfide.utilities;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -14,7 +15,7 @@ public class DateUtil {
     private static final String DATE_PATTERN = "yyyy-MM-dd, HH:mm:ss:SSS";
 
     private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern(DATE_PATTERN);
+            DateTimeFormatter.ofPattern(DATE_PATTERN).withZone(ZoneId.systemDefault());
 
     public static String format(Instant instant) {
         if (instant == null) {
