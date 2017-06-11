@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import viccrubs.bfide.client.MainClient;
 import viccrubs.bfide.client.log.ApplicationLog;
 import viccrubs.bfide.client.models.Log;
+import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.utilities.DateUtil;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class LogViewerController {
     private TableColumn<Log,String> timeColumn;
     @FXML
     private TableColumn<Log,String> typeColumn;
+
 
 
 

@@ -121,6 +121,8 @@ public class Controller implements Runnable {
                         ProjectInfo info = userManager.createNewProject(trueRequest.projectName, trueRequest.language);
                         output(new CreateNewProjectResponse(info==null,info));
                     }
+                } else if (request instanceof GetAllProjectsRequest){
+                    output(new GetAllProjectsResponse(userManager.getAllProjects()));
                 }
 
                 else{

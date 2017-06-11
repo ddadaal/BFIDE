@@ -33,6 +33,8 @@ public class RequestParser implements JsonDeserializer<Request> {
                 return gson.fromJson(jsonElement, NewVersionRequest.class);
             case "CreateNewProject":
                 return gson.fromJson(jsonElement, CreateNewProjectRequest.class);
+            case "GetAllProjects":
+                return gson.fromJson(jsonElement, GetAllProjectsRequest.class);
             default:
                 return baseRequest;
 

@@ -1,9 +1,12 @@
 package viccrubs.bfide.client.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
@@ -12,13 +15,19 @@ import viccrubs.bfide.client.MainClient;
 import viccrubs.bfide.client.log.ApplicationLog;
 import viccrubs.bfide.client.models.Log;
 import viccrubs.bfide.client.models.LogType;
+import viccrubs.bfide.client.models.ProjectInfoModel;
 import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.bfmachine.ProgramLanguage;
+import viccrubs.bfide.models.ProjectInfo;
 import viccrubs.bfide.models.User;
+import viccrubs.bfide.models.requests.GetAllProjectsRequest;
 import viccrubs.bfide.models.requests.RunProgramRequest;
 import viccrubs.bfide.models.response.ExecutionResponse;
+import viccrubs.bfide.models.response.GetAllProjectsResponse;
+import viccrubs.bfide.models.response.GetProjectInfoResponse;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MainWindowController  {
 
@@ -64,7 +73,8 @@ public class MainWindowController  {
     private boolean programRunning;
     private ApplicationLog appLog = new ApplicationLog();
     private Stage appStage;
-
+    private ProjectInfo currentProject;
+    private ObservableList<ProjectInfoModel> projects = FXCollections.observableArrayList();
     private String lastSavedContent;
 
 
@@ -87,6 +97,10 @@ public class MainWindowController  {
     private Text textLanguage;
     @FXML
     private Text textStatus;
+    @FXML
+    private Menu menuVersionControl;
+    @FXML
+    private Text textCurrentProject;
 
     public void switchLanguage(){
         if (language.equals(ProgramLanguage.BF)){
@@ -102,6 +116,25 @@ public class MainWindowController  {
     public void initialize(){
         setLanguage(ProgramLanguage.BF);
         textStatus.setText(appLog.getLogList().get(appLog.getLogList().size()-1).getDescription());
+        textCurrentProject.setText("New*");
+        updateVersions();
+
+
+    }
+
+    public void openOpenDialog(){
+        OpenNewProjectDialogController controller = OpenNewProjectDialogController.open();
+        if (controller!=null){
+            controller.setData(projects);
+        }
+
+    }
+
+    public void updateVersions(){
+
+        GetAllProjectsResponse projectRes = (GetAllProjectsResponse) connection.sendRequest(new GetAllProjectsRequest());
+
+        projects.addAll(Arrays.stream(projectRes.projects).map(ProjectInfoModel::new).toArray(ProjectInfoModel[]::new));
     }
 
     public void showLogs(){
