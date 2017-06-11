@@ -60,7 +60,7 @@ public class UserManager {
     }
 
     public Version getLatestVersionOfAProject(String projectName) {
-        return Arrays.stream(getAllVersionsOfAProject(projectName)).sorted(Comparator.comparingLong(x->x.timeStamp)).findFirst().orElse(null);
+        return Arrays.stream(getAllVersionsOfAProject(projectName)).sorted(Comparator.comparingLong(x->-x.timeStamp)).findFirst().orElse(null);
     }
 
     public String getContentOfAVersion(ProjectInfo info, Version version){

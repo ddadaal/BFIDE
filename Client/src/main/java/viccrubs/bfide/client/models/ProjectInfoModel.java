@@ -20,12 +20,14 @@ public class ProjectInfoModel {
         latestVersion = new SimpleObjectProperty<>(DateUtil.fromTimestamp(info.latestVersion.timeStamp));
         versionCount = new SimpleStringProperty(info.versions.length+"");
         language = new SimpleObjectProperty<>(info.language);
+        this.originalInfo = info;
     }
 
     private final StringProperty projectName;
     private final ObjectProperty<Instant> latestVersion;
     private final StringProperty versionCount;
     private final ObjectProperty<ProgramLanguage> language;
+    private ProjectInfo originalInfo;
 
     public String getProjectName() {
         return projectName.get();
@@ -73,6 +75,10 @@ public class ProjectInfoModel {
 
     public void setLanguage(ProgramLanguage language) {
         this.language.set(language);
+    }
+
+    public ProjectInfo toProjectInfo(){
+        return originalInfo;
     }
 
 }

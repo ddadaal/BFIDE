@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import viccrubs.bfide.client.MainClient;
@@ -20,14 +17,15 @@ import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.bfmachine.ProgramLanguage;
 import viccrubs.bfide.models.ProjectInfo;
 import viccrubs.bfide.models.User;
-import viccrubs.bfide.models.requests.GetAllProjectsRequest;
-import viccrubs.bfide.models.requests.RunProgramRequest;
-import viccrubs.bfide.models.response.ExecutionResponse;
-import viccrubs.bfide.models.response.GetAllProjectsResponse;
-import viccrubs.bfide.models.response.GetProjectInfoResponse;
+import viccrubs.bfide.models.Version;
+import viccrubs.bfide.models.requests.*;
+import viccrubs.bfide.models.response.*;
+import viccrubs.bfide.utilities.DateUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 public class MainWindowController  {
 
@@ -67,6 +65,10 @@ public class MainWindowController  {
         this.appStage = stage;
     }
 
+    public void setCurrentProjectName(String name){
+        this.textCurrentProject.setText(name);
+    }
+
     private User user;
     private Connection connection;
     private ProgramLanguage language;
@@ -74,13 +76,12 @@ public class MainWindowController  {
     private ApplicationLog appLog = new ApplicationLog();
     private Stage appStage;
     private ProjectInfo currentProject;
-    private ObservableList<ProjectInfoModel> projects = FXCollections.observableArrayList();
     private String lastSavedContent;
+    private Version currentVersion;
 
 
     @FXML
     private MenuButton userButton;
-
     @FXML
     private Button btnRun;
     @FXML
@@ -116,26 +117,46 @@ public class MainWindowController  {
     public void initialize(){
         setLanguage(ProgramLanguage.BF);
         textStatus.setText(appLog.getLogList().get(appLog.getLogList().size()-1).getDescription());
-        textCurrentProject.setText("New*");
-        updateVersions();
-
-
+        setCurrentProjectName("New@New");
     }
 
     public void openOpenDialog(){
         OpenNewProjectDialogController controller = OpenNewProjectDialogController.open();
         if (controller!=null){
-            controller.setData(projects);
+            controller.setConnection(connection);
+            controller.registerOnProjectSelect(this::setCurrentProject);
         }
 
     }
 
-    public void updateVersions(){
-
-        GetAllProjectsResponse projectRes = (GetAllProjectsResponse) connection.sendRequest(new GetAllProjectsRequest());
-
-        projects.addAll(Arrays.stream(projectRes.projects).map(ProjectInfoModel::new).toArray(ProjectInfoModel[]::new));
+    public void setCurrentProject(ProjectInfo info){
+        this.currentProject = info;
+        this.setLanguage(info.language);
+        this.setCurrentProjectName(info.projectName+"@ ");
+        this.setCurrentVersion(info.latestVersion);
+        for(Version version: currentProject.versions){
+            addVersionToMenu(version);
+        }
     }
+
+    public void addVersionToMenu(Version... versions){
+        for(Version version : versions){
+            VersionMenuItem item = new VersionMenuItem(version);
+            item.registerOnSelect(this::setCurrentVersion);
+            menuVersionControl.getItems().add(item);
+        }
+    }
+
+
+    public void setCurrentVersion(Version version){
+        GetASpecificVersionResponse res = (GetASpecificVersionResponse)connection.sendRequest(new GetASpecificVersionRequest(currentProject, version));
+        if (res!=null){
+            this.textCode.setText(res.content);
+            textCurrentProject.setText(textCurrentProject.getText().split("@")[0]+"@"+ DateUtil.format(res.version.version));
+            currentVersion = res.version;
+        }
+    }
+
 
     public void showLogs(){
         appLog.showLogViewer();
@@ -188,10 +209,41 @@ public class MainWindowController  {
     }
 
     public void save(){
-
+        SaveVersionResponse res = (SaveVersionResponse)connection.sendRequest(new SaveVersionRequest(textCode.getText(), System.currentTimeMillis(), currentProject));
+        if (res.success){
+            addLog("Saved successfully.",LogType.Success);
+            addVersionToMenu(res.latestVersion);
+            updateProjectInfo();
+        }
     }
 
     public void openAbout(){
         AboutController.open();
     }
+
+    public void updateProjectInfo(){
+        GetProjectInfoResponse res = (GetProjectInfoResponse)connection.sendRequest(new GetProjectInfoRequest(currentProject.projectName));
+        setCurrentProject(res.info);
+    }
+}
+
+class VersionMenuItem extends MenuItem{
+    private final Version version;
+    private Consumer<Version> eventOnSelect;
+    public VersionMenuItem(Version version){
+        super();
+        this.version = version;
+        this.setText(DateUtil.format(version.version));
+        this.setOnAction(e->{
+            if (eventOnSelect!=null){
+                eventOnSelect.accept(this.version);
+            }
+        });
+    }
+
+    public void registerOnSelect(Consumer<Version> event){
+        eventOnSelect = event;
+    }
+
+
 }

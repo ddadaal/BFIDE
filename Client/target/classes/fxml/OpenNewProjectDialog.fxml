@@ -7,18 +7,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.OpenNewProjectDialogController">
+<AnchorPane prefHeight="317.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.OpenNewProjectDialogController">
    <children>
-      <TableView fx:id="projectsTable" layoutY="64.0" prefHeight="200.0" prefWidth="446.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+      <TableView fx:id="projectTable" layoutY="64.0" prefHeight="200.0" prefWidth="446.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
         <columns>
           <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
           <TableColumn fx:id="languageColumn" prefWidth="75.0" text="Language" />
-            <TableColumn fx:id="latestVersionColumn" prefWidth="112.0" text="Latest Version" />
-            <TableColumn fx:id="versionCountColumn" prefWidth="117.0" text="Version Count" />
+            <TableColumn fx:id="latestVersionColumn" prefWidth="169.0" text="Latest Version" />
+            <TableColumn fx:id="versionCountColumn" prefWidth="110.0" text="Version Count" />
         </columns>
       </TableView>
-      <Text layoutX="227.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Project from Server" />
-      <Button layoutX="273.0" layoutY="291.0" mnemonicParsing="false" text="Open" />
+      <Text layoutX="178.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Project from Server">
+         <font>
+            <Font size="20.0" />
+         </font></Text>
+      <Button layoutX="276.0" layoutY="270.0" mnemonicParsing="false" onAction="#onSelect" text="Open" />
    </children>
 </AnchorPane>

@@ -108,7 +108,6 @@ public class LoginPanelController {
 
 
     public void btnConnectOnClick(){
-        //TODO: Connect to Remote server
         btnConnect.setText("Connecting...");
         btnConnect.setDisable(true);
         setEnableForm(false);

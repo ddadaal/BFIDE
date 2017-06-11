@@ -37,6 +37,8 @@ public class ResponseParser implements JsonDeserializer<Response> {
                 return gson.fromJson(jsonElement, SaveVersionResponse.class);
             case "GetAllProjects":
                 return gson.fromJson(jsonElement, GetAllProjectsResponse.class);
+            case "GetASpecificVersion":
+                return gson.fromJson(jsonElement, GetASpecificVersionResponse.class);
             default:
                 return baseResponse;
 

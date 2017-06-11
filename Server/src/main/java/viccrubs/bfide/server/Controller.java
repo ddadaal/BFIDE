@@ -98,18 +98,19 @@ public class Controller implements Runnable {
                     }else{
                         output(new GetProjectInfoResponse(userManager.getProjectInfo(trueRequest.projectName)));
                     }
-                } else if (request instanceof NewVersionRequest){
-                    NewVersionRequest trueRequest = (NewVersionRequest)request;
-                    ProjectInfo info = userManager.getProjectInfo(trueRequest.projectName);
+                } else if (request instanceof SaveVersionRequest){
+                    SaveVersionRequest trueRequest = (SaveVersionRequest)request;
+                    ProjectInfo info = userManager.getProjectInfo(trueRequest.project.projectName);
                     if (info==null){
                         output(new SaveVersionResponse(false,null));
                         continue;
                     }
                     Version latestVersion = info.latestVersion;
                     String latestContent = userManager.getContentOfAVersion(info,latestVersion).trim();
-                    if (latestVersion == null || !trueRequest.content.equals(latestContent)){
+                    if (latestVersion == null || !trueRequest.content.trim().equals(latestContent)){
                         latestVersion = userManager.createNewVersion(info, trueRequest.content, new Version(trueRequest.timestamp));
                         output(new SaveVersionResponse(true, latestVersion));
+
                     }else {
                         output(new SaveVersionResponse(false, latestVersion));
                     }
@@ -123,6 +124,9 @@ public class Controller implements Runnable {
                     }
                 } else if (request instanceof GetAllProjectsRequest){
                     output(new GetAllProjectsResponse(userManager.getAllProjects()));
+                } else if (request instanceof  GetASpecificVersionRequest){
+                    GetASpecificVersionRequest trueRequest = (GetASpecificVersionRequest)request;
+                    output(new GetASpecificVersionResponse(userManager.getContentOfAVersion(trueRequest.projectInfo, trueRequest.version), trueRequest.version));
                 }
 
                 else{
