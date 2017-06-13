@@ -1,5 +1,6 @@
 package viccrubs.bfide.client.controllers;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -121,7 +122,7 @@ public class MainWindowController  {
     }
 
     public void openOpenDialog(){
-        OpenNewProjectDialogController controller = OpenNewProjectDialogController.open();
+        OpenProjectDialogController controller = OpenProjectDialogController.open();
         if (controller!=null){
             controller.setConnection(connection);
             controller.registerOnProjectSelect(this::setCurrentProject);
@@ -129,11 +130,19 @@ public class MainWindowController  {
 
     }
 
+    public void openNewDialog(){
+        NewProjectDialogController controller = NewProjectDialogController.open(connection);
+        if (controller!=null){
+            controller.registerOnProjectCreated(this::setCurrentProject);
+        }
+    }
+
     public void setCurrentProject(ProjectInfo info){
         this.currentProject = info;
         this.setLanguage(info.language);
         this.setCurrentProjectName(info.projectName+"@ ");
         this.setCurrentVersion(info.latestVersion);
+        menuVersionControl.getItems().clear();
         for(Version version: currentProject.versions){
             addVersionToMenu(version);
         }

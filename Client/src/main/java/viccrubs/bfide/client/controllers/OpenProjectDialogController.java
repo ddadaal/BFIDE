@@ -28,7 +28,7 @@ import java.util.function.UnaryOperator;
 /**
  * Created by viccrubs on 2017/6/8.
  */
-public class OpenNewProjectDialogController {
+public class OpenProjectDialogController {
 
     @FXML
     private TableView<ProjectInfoModel> projectTable;
@@ -87,20 +87,24 @@ public class OpenNewProjectDialogController {
             }
 
         }
+        onCancel();
+    }
+
+    public void onCancel(){
         stage.close();
     }
 
 
-    public static OpenNewProjectDialogController open(){
+    public static OpenProjectDialogController open(){
         try {
             Stage stage= new Stage();
             stage.setTitle("Open New Project");
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainClient.class.getResource("/fxml/OpenNewProjectDialog.fxml"));
+            loader.setLocation(MainClient.class.getResource("/fxml/OpenProjectDialog.fxml"));
 
             Scene scene = new Scene(loader.load());
-            OpenNewProjectDialogController controller = loader.getController();
+            OpenProjectDialogController controller = loader.getController();
             controller.setStage(stage);
             stage.setScene(scene);
             stage.show();

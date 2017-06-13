@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="357.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.OpenProjectDialogController">
+   <children>
+      <TableView fx:id="projectTable" layoutY="67.0" prefHeight="200.0" prefWidth="446.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="languageColumn" prefWidth="104.0" text="Language" />
+            <TableColumn fx:id="latestVersionColumn" prefWidth="179.0" text="Latest Version" />
+            <TableColumn fx:id="versionCountColumn" prefWidth="101.0" text="Version Count" />
+        </columns>
+      </TableView>
+      <Text layoutX="157.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Open Project from Server" wrappingWidth="279.78466796875">
+         <font>
+            <Font size="23.0" />
+         </font></Text>
+      <Button layoutX="231.0" layoutY="300.0" mnemonicParsing="false" onAction="#onSelect" text="Open" />
+      <Button layoutX="322.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+   </children>
+</AnchorPane>

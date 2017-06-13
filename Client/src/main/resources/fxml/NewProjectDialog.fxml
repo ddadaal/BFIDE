@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="210.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.NewProjectDialogController">
+   <children>
+      <Text layoutX="126.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Project">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Text>
+      <Text layoutX="40.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Project Name" />
+      <Text layoutX="51.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language" />
+      <TextField fx:id="tfProjectName" layoutX="132.0" layoutY="64.0" />
+      <Button fx:id="btnCreate" layoutX="117.0" layoutY="155.0" mnemonicParsing="false" onAction="#onCreate" text="Create" />
+      <Button fx:id="btnCancel" layoutX="200.0" layoutY="155.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+      <MenuButton fx:id="mbtnLanguage" layoutX="160.0" layoutY="103.0" mnemonicParsing="false" text="BrainFuck">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#bfSelected" text="BrainFuck" />
+          <MenuItem mnemonicParsing="false" onAction="#ookSelected" text="Ook!" />
+        </items>
+      </MenuButton>
+   </children>
+</AnchorPane>

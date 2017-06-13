@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -79,6 +80,7 @@ public class UserManager {
         }
         File newProject = new File(Utils.pathCombine(userDirectory.getAbsolutePath(),projectName+"."+language.toString()));
         if (newProject.mkdirs()){
+            createNewVersion(getProjectInfo(projectName),"",new Version(System.currentTimeMillis()));
             return getProjectInfo(projectName);
         }else{
             return null;

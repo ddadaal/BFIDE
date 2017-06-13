@@ -1,8 +1,6 @@
 package viccrubs.bfide.server;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import viccrubs.bfide.bfmachine.*;
 import viccrubs.bfide.models.*;
 import viccrubs.bfide.models.requests.*;
@@ -10,13 +8,10 @@ import viccrubs.bfide.models.response.*;
 import viccrubs.bfide.server.storage.UserManager;
 import viccrubs.bfide.server.storage.authentication.Authentication;
 import viccrubs.bfide.server.storage.authentication.Register;
-import viccrubs.bfide.utilities.DynamicInStream;
-import viccrubs.bfide.utilities.DynamicOutStream;
 
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.UUID;
 
 /**
  * Created by viccrubs on 2017/5/6.
@@ -117,10 +112,10 @@ public class Controller implements Runnable {
                 } else if (request instanceof CreateNewProjectRequest){
                     CreateNewProjectRequest trueRequest = (CreateNewProjectRequest)request;
                     if (userManager.projectExists(trueRequest.projectName)){
-                        output(new CreateNewProjectResponse(false,null));
+                        output(new CreateNewProjectResponse(false,null, "Project already exists."));
                     }else{
                         ProjectInfo info = userManager.createNewProject(trueRequest.projectName, trueRequest.language);
-                        output(new CreateNewProjectResponse(info==null,info));
+                        output(new CreateNewProjectResponse(info!=null,info, ""));
                     }
                 } else if (request instanceof GetAllProjectsRequest){
                     output(new GetAllProjectsResponse(userManager.getAllProjects()));

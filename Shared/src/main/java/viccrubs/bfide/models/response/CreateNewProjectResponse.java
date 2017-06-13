@@ -10,10 +10,13 @@ public class CreateNewProjectResponse extends Response {
     @Expose
     public final boolean success;
     @Expose
-    public final ProjectInfo info;
+    public final ProjectInfo newProjectInfo;
+    @Expose
+    public final String description;
 
-    public CreateNewProjectResponse(boolean success, ProjectInfo info) {
+    public CreateNewProjectResponse(boolean success, ProjectInfo newProjectInfo, String description) {
         this.success = success;
-        this.info = info;
+        this.newProjectInfo = newProjectInfo;
+        this.description = description;
     }
 }

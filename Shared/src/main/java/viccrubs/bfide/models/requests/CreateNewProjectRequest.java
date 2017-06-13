@@ -11,12 +11,9 @@ public class CreateNewProjectRequest extends Request {
     public final String projectName;
     @Expose
     public final ProgramLanguage language;
-    @Expose
-    public final String firstVersion;
 
-    public CreateNewProjectRequest(String projectName, ProgramLanguage language, String firstVersion) {
+    public CreateNewProjectRequest(String projectName, ProgramLanguage language) {
         this.projectName = projectName;
         this.language = language;
-        this.firstVersion = firstVersion;
     }
 }

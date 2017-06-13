@@ -14,9 +14,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" text="New Project" />
+                  <MenuItem mnemonicParsing="false" onAction="#openNewDialog" text="New Project" />
                   <MenuItem mnemonicParsing="false" onAction="#openOpenDialog" text="Open Project from Server" />
-                  <MenuItem mnemonicParsing="false" text="Open File from Local Disk" />
                   <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
             </items>
           </Menu>
@@ -25,7 +24,11 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu fx:id="menuVersionControl" mnemonicParsing="false" text="Version Control" />
+          <Menu fx:id="menuVersionControl" mnemonicParsing="false" text="Version Control">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
@@ -50,7 +53,7 @@
               </items>
             </MenuButton>
             <Button fx:id="btnRunWithoutInput" layoutX="58.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#onRunWithoutInputClicked" text="Run without Input" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
-            <Text fx:id="textCurrentProject" layoutX="212.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="textCurrentProject" layoutX="218.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="548.0" prefHeight="25.0" prefWidth="611.0" AnchorPane.bottomAnchor="0.0">

@@ -19,12 +19,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="client" />
+        <module name="Client" />
         <module name="shared" />
         <module name="Shared" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="client" target="1.8" />
+      <module name="Client" target="1.8" />
       <module name="Shared" target="1.8" />
     </bytecodeTargetLevel>
   </component>
