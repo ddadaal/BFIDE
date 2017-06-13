@@ -25,14 +25,14 @@ public class Program implements Iterable<Instruction>, Iterator<Instruction> {
     }
 
     public static Program translateOokProgram(String ookProgram) {
-        int ookInstructionLength = 6;
+        int ookInstructionLength = 8;
         ArrayList<Instruction> program = new ArrayList<>();
-        ookProgram = ookProgram.replace(" ", "");
-        for (int startPointer = 0; startPointer < ookProgram.length(); startPointer += ookInstructionLength) {
-            if (startPointer + ookInstructionLength >= ookProgram.length()) {
-                return null;
-            }
-            Instruction bf = Instruction.of(ookProgram.substring(startPointer, startPointer + ookInstructionLength));
+        ookProgram = ookProgram.replace(" ", "").replace("\n","");
+        if (ookProgram.length()%ookInstructionLength!=0){
+            return null;
+        }
+        for (int pointer = 0; pointer < ookProgram.length(); pointer += ookInstructionLength) {
+            Instruction bf = Instruction.of(ookProgram.substring(pointer, pointer + ookInstructionLength));
             if (bf == null) {
                 return null;
             }

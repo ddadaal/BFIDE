@@ -7,7 +7,6 @@ import viccrubs.bfide.models.ExecutionResult;
  * Created by viccrubs on 2017/5/10.
  */
 public class ExecutionResponse extends Response {
-    @Expose
     public final ExecutionResult result;
 
 

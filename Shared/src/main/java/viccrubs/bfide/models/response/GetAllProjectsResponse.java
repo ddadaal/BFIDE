@@ -7,7 +7,6 @@ import viccrubs.bfide.models.ProjectInfo;
  * Created by viccrubs on 2017/6/8.
  */
 public class GetAllProjectsResponse extends Response {
-    @Expose
     public final ProjectInfo[] projects;
 
 

@@ -1,6 +1,5 @@
 package viccrubs.bfide.client.controllers;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -73,13 +72,13 @@ public class MainWindowController  {
     private User user;
     private Connection connection;
     private ProgramLanguage language;
-    private boolean programRunning;
     private ApplicationLog appLog = new ApplicationLog();
     private Stage appStage;
     private ProjectInfo currentProject;
-    private String lastSavedContent;
     private Version currentVersion;
 
+    @FXML
+    private MenuItem miSave;
 
     @FXML
     private MenuButton userButton;
@@ -105,20 +104,20 @@ public class MainWindowController  {
     private Text textCurrentProject;
 
     public void switchLanguage(){
-        if (language.equals(ProgramLanguage.BF)){
-            setLanguage(ProgramLanguage.Ook);
-
-        }else{
-            setLanguage(ProgramLanguage.BF);
-        }
-        addLog(SWITCH_LANGUAGE+language.toString()+".");
+//        if (language.equals(ProgramLanguage.BF)){
+//            setLanguage(ProgramLanguage.Ook);
+//
+//        }else{
+//            setLanguage(ProgramLanguage.BF);
+//        }
+//        addLog(SWITCH_LANGUAGE+language.toString()+".");
     }
 
     @FXML
     public void initialize(){
         setLanguage(ProgramLanguage.BF);
         textStatus.setText(appLog.getLogList().get(appLog.getLogList().size()-1).getDescription());
-        setCurrentProjectName("New@New");
+        setCurrentProjectName("Get Started by Opening or Creating a New Project");
     }
 
     public void openOpenDialog(){
@@ -126,6 +125,7 @@ public class MainWindowController  {
         if (controller!=null){
             controller.setConnection(connection);
             controller.registerOnProjectSelect(this::setCurrentProject);
+            controller.registerOnCreateProject(this::openNewDialog);
         }
 
     }
@@ -146,6 +146,12 @@ public class MainWindowController  {
         for(Version version: currentProject.versions){
             addVersionToMenu(version);
         }
+        btnRun.setDisable(false);
+        btnRunWithoutInput.setDisable(false);
+        textCode.setEditable(true);
+        textInput.setEditable(true);
+        miSave.setDisable(false);
+
     }
 
     public void addVersionToMenu(Version... versions){

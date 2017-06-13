@@ -61,12 +61,12 @@ public class NewProjectDialogController {
             if (res.description.equals("Project already exists.")){
                 Alert alertDialog = new Alert(Alert.AlertType.ERROR);
                 alertDialog.setContentText("Project already exists.");
-                alertDialog.setHeaderText("Create failed.");
+                alertDialog.setHeaderText(null);
                 alertDialog.showAndWait();
             }else{
                 Alert alertDialog = new Alert(Alert.AlertType.ERROR);
                 alertDialog.setContentText("An error occurred.");
-                alertDialog.setHeaderText("Create failed.");
+                alertDialog.setHeaderText(null);
                 alertDialog.showAndWait();
             }
         }

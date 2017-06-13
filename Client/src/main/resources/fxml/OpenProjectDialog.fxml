@@ -21,7 +21,8 @@
          <font>
             <Font size="23.0" />
          </font></Text>
-      <Button layoutX="231.0" layoutY="300.0" mnemonicParsing="false" onAction="#onSelect" text="Open" />
-      <Button layoutX="322.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+      <Button layoutX="170.0" layoutY="300.0" mnemonicParsing="false" onAction="#onSelect" text="Open" />
+      <Button layoutX="358.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+      <Button layoutX="263.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCreateNew" text="New" />
    </children>
 </AnchorPane>

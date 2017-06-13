@@ -46,6 +46,7 @@ public class OpenProjectDialogController {
     private ObservableList<ProjectInfoModel> projects = FXCollections.observableArrayList();
     private Stage stage;
     private Consumer<ProjectInfo> eventOnProjectSelect;
+    private Runnable eventOnCreateProject;
 
     public void setStage(Stage stage){
         this.stage = stage;
@@ -78,6 +79,7 @@ public class OpenProjectDialogController {
     public void registerOnProjectSelect(Consumer<ProjectInfo> event){
         this.eventOnProjectSelect = event;
     }
+    public void registerOnCreateProject(Runnable event){this.eventOnCreateProject = event;}
 
     public void onSelect(){
         if (eventOnProjectSelect!=null){
@@ -88,6 +90,13 @@ public class OpenProjectDialogController {
 
         }
         onCancel();
+    }
+
+    public void onCreateNew(){
+        if (eventOnCreateProject!=null){
+            onCancel();
+            eventOnCreateProject.run();
+        }
     }
 
     public void onCancel(){

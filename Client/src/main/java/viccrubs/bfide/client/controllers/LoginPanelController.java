@@ -179,12 +179,16 @@ public class LoginPanelController {
                 appStage.setScene(scene);
                 appStage.sizeToScene();
                 appStage.setTitle("BF/Ook IDE");
-
+                controller.openOpenDialog();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else{
             addLog(LOGIN_FAILURE, LogType.Error);
+            Alert alertDialog = new Alert(Alert.AlertType.ERROR);
+            alertDialog.setContentText("Login failed. Username and/or password is wrong.");
+            alertDialog.setHeaderText(null);
+            alertDialog.showAndWait();
         }
     }
 
@@ -193,8 +197,15 @@ public class LoginPanelController {
         RegisterResponse res = (RegisterResponse)connection.sendRequest(new RegisterRequest(tfRegisterUsername.getText(), pfRegisterPassword.getText()));
         if (res.success){
             addLog(REGISTER_SUCCESS, LogType.Success);
+            tfLoginUsername.setText(tfRegisterUsername.getText());
+            pfLoginPassword.setText(pfRegisterPassword.getText());
+            login();
         }else{
             addLog(REGISTER_FAILURE, LogType.Error);
+            Alert alertDialog = new Alert(Alert.AlertType.ERROR);
+            alertDialog.setContentText("Register failed. Username exists.");
+            alertDialog.setHeaderText(null);
+            alertDialog.showAndWait();
         }
     }
 

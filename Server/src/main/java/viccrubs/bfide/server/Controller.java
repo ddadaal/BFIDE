@@ -79,8 +79,8 @@ public class Controller implements Runnable {
                         userManager = new UserManager(currentUser);
                     }
                 } else if (request instanceof RegisterRequest) {
-                    RegisterRequest register = (RegisterRequest) request;
-                    if (Register.register(register.username, register.password).isPresent()) {
+                    RegisterRequest trueRequest = (RegisterRequest) request;
+                    if (Register.register(trueRequest.username, trueRequest.password).isPresent()) {
                         output(new RegisterResponse(true));
                         auth.updateUsers();
                     }else{

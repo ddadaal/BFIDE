@@ -7,11 +7,8 @@ import viccrubs.bfide.models.ProjectInfo;
  * Created by viccrubs on 2017/6/1.
  */
 public class CreateNewProjectResponse extends Response {
-    @Expose
     public final boolean success;
-    @Expose
     public final ProjectInfo newProjectInfo;
-    @Expose
     public final String description;
 
     public CreateNewProjectResponse(boolean success, ProjectInfo newProjectInfo, String description) {
