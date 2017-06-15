@@ -19,6 +19,7 @@ public class BFMachine {
 
     public void resetStates(){
         this.states.reset();
+        occurredException = null;
     }
 
     public ExecutionResult execute(Program program, String input){

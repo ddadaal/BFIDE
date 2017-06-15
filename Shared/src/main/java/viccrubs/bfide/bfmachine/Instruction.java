@@ -37,21 +37,21 @@ public class Instruction {
     public static String translateBFToOok(char bf){
         switch(bf){
             case '>':
-                return "Ook. Ook?";
+                return "Ook.Ook?";
             case '<':
-                return "Ook? Ook.";
+                return "Ook?Ook.";
             case '+':
-                return "Ook. Ook.";
+                return "Ook.Ook.";
             case '-':
-                return "Ook! Ook!";
+                return "Ook!Ook!";
             case '.':
-                return "Ook! Ook.";
+                return "Ook!Ook.";
             case ',':
-                return "Ook. Ook!";
+                return "Ook.Ook!";
             case '[':
-                return "Ook! Ook?";
+                return "Ook!Ook?";
             case ']':
-                return "Ook? Ook!";
+                return "Ook?Ook!";
             default:
                 return "???";
         }
