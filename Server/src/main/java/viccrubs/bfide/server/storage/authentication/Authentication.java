@@ -1,7 +1,7 @@
 package viccrubs.bfide.server.storage.authentication;
 
 import com.google.gson.Gson;
-import viccrubs.bfide.models.User;
+import viccrubs.bfide.model.User;
 import viccrubs.bfide.server.Utils;
 import viccrubs.bfide.server.storage.Configurations;
 

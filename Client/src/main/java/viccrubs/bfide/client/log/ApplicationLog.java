@@ -6,8 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import viccrubs.bfide.client.MainClient;
-import viccrubs.bfide.client.controllers.LogViewerController;
-import viccrubs.bfide.client.models.Log;
+import viccrubs.bfide.client.controller.LogViewerController;
+import viccrubs.bfide.client.model.Log;
 
 import java.io.IOException;
 

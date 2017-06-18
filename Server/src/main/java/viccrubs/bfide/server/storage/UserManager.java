@@ -1,28 +1,17 @@
 package viccrubs.bfide.server.storage;
 
-import viccrubs.bfide.bfmachine.Program;
 import viccrubs.bfide.bfmachine.ProgramLanguage;
-import viccrubs.bfide.models.ProjectInfo;
-import viccrubs.bfide.models.User;
-import viccrubs.bfide.models.Version;
+import viccrubs.bfide.model.ProjectInfo;
+import viccrubs.bfide.model.User;
+import viccrubs.bfide.model.Version;
 import viccrubs.bfide.server.Utils;
-import viccrubs.bfide.utilities.DateUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by viccrubs on 2017/5/10.
@@ -85,6 +74,24 @@ public class UserManager {
         }else{
             return null;
         }
+
+    }
+
+    public boolean deleteProject(ProjectInfo projectInfo){
+        if (!projectExists(projectInfo.projectName)){
+            return false;
+        }
+        boolean result = true;
+        File path = new File(getProjectPath(projectInfo.projectName));
+
+        for(File f : path.listFiles()){
+            result = f.delete();
+            if (!result){
+                return false;
+            }
+        }
+
+        return path.delete();
 
     }
 

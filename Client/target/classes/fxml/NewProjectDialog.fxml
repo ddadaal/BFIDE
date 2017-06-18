@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane prefHeight="210.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.NewProjectDialogController">
+<AnchorPane prefHeight="210.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controller.NewProjectDialogController">
    <children>
       <Text layoutX="126.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Project">
          <font>

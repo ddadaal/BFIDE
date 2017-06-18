@@ -1,7 +1,6 @@
 package viccrubs.bfide.bfmachine;
 
-import com.sun.org.apache.bcel.internal.generic.InstructionComparator;
-import viccrubs.bfide.bfmachine.exceptions.OokUnknownInstructionException;
+import viccrubs.bfide.bfmachine.exception.UnknownInstructionException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,11 +19,21 @@ public class Program implements Iterable<Instruction>, Iterator<Instruction> {
         this.language = language;
     }
 
-    public static Program translateBFProgram(String bfProgram){
-        return new Program(bfProgram.chars().mapToObj(x->Instruction.of((char)x)).toArray(Instruction[]::new), ProgramLanguage.BF);
+    public static Program translateBFProgram(String bfProgram) throws UnknownInstructionException{
+        ArrayList<Instruction> result = new ArrayList<>();
+        for(int c : bfProgram.chars().toArray()){
+            Instruction instruction = Instruction.of((char)c);
+            if (instruction == null){
+                throw new UnknownInstructionException((char)c+"");
+            }
+            result.add(instruction);
+        }
+        Instruction[] resultArray = new Instruction[result.size()];
+        result.toArray(resultArray);
+        return new Program(resultArray, ProgramLanguage.BF);
     }
 
-    public static Program translateOokProgram(String ookProgram) {
+    public static Program translateOokProgram(String ookProgram) throws UnknownInstructionException{
         int ookInstructionLength = 8;
         ArrayList<Instruction> program = new ArrayList<>();
         ookProgram = ookProgram.replace(" ", "").replace("\n","");
@@ -32,9 +41,10 @@ public class Program implements Iterable<Instruction>, Iterator<Instruction> {
             return null;
         }
         for (int pointer = 0; pointer < ookProgram.length(); pointer += ookInstructionLength) {
-            Instruction bf = Instruction.of(ookProgram.substring(pointer, pointer + ookInstructionLength));
+            String raw = ookProgram.substring(pointer, pointer + ookInstructionLength);
+            Instruction bf = Instruction.of(raw);
             if (bf == null) {
-                return null;
+                throw new UnknownInstructionException(raw);
             }
             program.add(bf);
         }
@@ -43,7 +53,7 @@ public class Program implements Iterable<Instruction>, Iterator<Instruction> {
         return new Program(result, ProgramLanguage.Ook);
     }
 
-    public static Program translateProgram(String program, ProgramLanguage language){
+    public static Program translateProgram(String program, ProgramLanguage language) throws UnknownInstructionException{
         if (language.equals(ProgramLanguage.BF)){
             return translateBFProgram(program);
         }else{

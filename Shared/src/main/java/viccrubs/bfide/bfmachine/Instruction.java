@@ -13,6 +13,9 @@ public class Instruction {
     }
 
     public static Instruction of(char bfChar){
+        if (translateBFToOok(bfChar).equals("???")){
+            return null;
+        }
         return new Instruction(bfChar, ProgramLanguage.BF);
     }
 

@@ -2,12 +2,14 @@ package viccrubs.bfide.server;
 
 import com.google.gson.Gson;
 import viccrubs.bfide.bfmachine.*;
-import viccrubs.bfide.models.*;
-import viccrubs.bfide.models.requests.*;
-import viccrubs.bfide.models.response.*;
+import viccrubs.bfide.bfmachine.exception.UnknownInstructionException;
+import viccrubs.bfide.model.*;
+import viccrubs.bfide.model.request.*;
+import viccrubs.bfide.model.response.*;
 import viccrubs.bfide.server.storage.UserManager;
 import viccrubs.bfide.server.storage.authentication.Authentication;
 import viccrubs.bfide.server.storage.authentication.Register;
+import viccrubs.bfide.util.ConfiguredGson;
 
 import java.io.PrintStream;
 import java.net.Socket;
@@ -36,6 +38,7 @@ public class Controller implements Runnable {
         out.print("\r\n");
     }
 
+    @Override
     public void run() {
         try {
 
@@ -61,8 +64,13 @@ public class Controller implements Runnable {
                     if (currentUser==null){
                         output(new RequireLoginResponse());
                     }else{
-                        ExecutionResult result = machine.execute(Program.translateProgram(trueRequest.program, trueRequest.language), trueRequest.input);
-                        output(new ExecutionResponse(result));
+                        try{
+                            Program program = Program.translateProgram(trueRequest.program, trueRequest.language);
+                            ExecutionResult result = machine.execute(program, trueRequest.input);
+                            output(new ExecutionResponse(result));
+                        }catch (UnknownInstructionException ex){
+                            output(new ExecutionResponse(new ExecutionResult("",ex, 0)));
+                        }
                     }
                 } else if (request instanceof TerminateConnectionRequest) {
                     System.out.println("Terminating the connection.");
@@ -122,6 +130,9 @@ public class Controller implements Runnable {
                 } else if (request instanceof  GetASpecificVersionRequest){
                     GetASpecificVersionRequest trueRequest = (GetASpecificVersionRequest)request;
                     output(new GetASpecificVersionResponse(userManager.getContentOfAVersion(trueRequest.projectInfo, trueRequest.version), trueRequest.version));
+                } else if (request instanceof  DeleteProjectRequest){
+                    DeleteProjectRequest trueRequest = (DeleteProjectRequest)request;
+                    output(new DeleteProjectResponse(userManager.deleteProject(trueRequest.projectInfo),""));
                 }
 
                 else{

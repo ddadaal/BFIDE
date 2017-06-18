@@ -1,10 +1,8 @@
 package viccrubs.bfide.server.storage.authentication;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import viccrubs.bfide.models.ConfiguredGson;
-import viccrubs.bfide.models.User;
-import viccrubs.bfide.server.BFIDEServer;
+import viccrubs.bfide.util.ConfiguredGson;
+import viccrubs.bfide.model.User;
 import viccrubs.bfide.server.Utils;
 import viccrubs.bfide.server.storage.Configurations;
 
@@ -12,10 +10,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 /**

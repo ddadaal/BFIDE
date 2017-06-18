@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="357.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controllers.OpenProjectDialogController">
+<AnchorPane prefHeight="357.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viccrubs.bfide.client.controller.OpenProjectDialogController">
    <children>
       <TableView fx:id="projectTable" layoutY="67.0" prefHeight="200.0" prefWidth="446.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <columns>
@@ -21,8 +21,9 @@
          <font>
             <Font size="23.0" />
          </font></Text>
-      <Button layoutX="170.0" layoutY="300.0" mnemonicParsing="false" onAction="#onSelect" text="Open" />
-      <Button layoutX="358.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
-      <Button layoutX="263.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCreateNew" text="New" />
+      <Button layoutX="124.0" layoutY="300.0" mnemonicParsing="false" onAction="#onSelect" text="Open" />
+      <Button layoutX="219.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCreateNew" text="New" />
+      <Button layoutX="306.0" layoutY="300.0" mnemonicParsing="false" onAction="#onDelete" text="Delete" />
+      <Button layoutX="409.0" layoutY="300.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
    </children>
 </AnchorPane>

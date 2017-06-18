@@ -4,16 +4,11 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import viccrubs.bfide.client.controllers.LoginPanelController;
+import viccrubs.bfide.client.controller.LoginPanelController;
 import viccrubs.bfide.client.log.ApplicationLog;
-import viccrubs.bfide.client.models.Log;
-import viccrubs.bfide.models.response.LoginResponse;
+import viccrubs.bfide.client.model.Log;
 
 public class MainClient extends Application {
 

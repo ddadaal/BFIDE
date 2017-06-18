@@ -1,11 +1,10 @@
 package viccrubs.bfide.client.socket;
 
 import com.google.gson.Gson;
-import com.sun.istack.internal.NotNull;
-import viccrubs.bfide.models.ConfiguredGson;
-import viccrubs.bfide.models.requests.Request;
-import viccrubs.bfide.models.requests.TerminateConnectionRequest;
-import viccrubs.bfide.models.response.Response;
+import viccrubs.bfide.util.ConfiguredGson;
+import viccrubs.bfide.model.request.Request;
+import viccrubs.bfide.model.request.TerminateConnectionRequest;
+import viccrubs.bfide.model.response.Response;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -38,7 +37,8 @@ public class Connection implements Closeable {
     public Response sendRequest(Request request){
         out.print(gson.toJson(request));
         out.print("\r\n");
-        return gson.fromJson(reader.next(),Response.class);
+        String raw = reader.next();
+        return gson.fromJson(raw,Response.class);
 
     }
 

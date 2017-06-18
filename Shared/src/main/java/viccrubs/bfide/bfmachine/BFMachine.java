@@ -1,7 +1,7 @@
 package viccrubs.bfide.bfmachine;
 
-import viccrubs.bfide.bfmachine.exceptions.*;
-import viccrubs.bfide.models.ExecutionResult;
+import viccrubs.bfide.bfmachine.exception.*;
+import viccrubs.bfide.model.ExecutionResult;
 
 /**
  * Created by viccrubs on 2017/5/3.
@@ -99,7 +99,7 @@ public class BFMachine {
                 break;
             case ']':
                 if (this.states.cycleStack.empty()){
-                    this.occurredException = new CycleStackEmptyException(states);
+                    this.occurredException = new LoopStackEmptyException(states);
                 }
                 if (this.states.array[this.states.arrayPointer] != 0) {
                     this.states.programCounter = this.states.cycleStack.pop();
@@ -107,7 +107,7 @@ public class BFMachine {
 
                 break;
             default:
-                this.occurredException =  new UnknownInstructionException(states);
+
         }
     }
 
