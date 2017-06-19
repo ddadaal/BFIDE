@@ -11,13 +11,11 @@ public class BFIDEServer {
     public static void main(String[] args) throws IOException {
         ServerSocket server = new ServerSocket(20006);
         Socket client = null;
-        boolean f = true;
         System.out.println("Waiting for connection");
-        while(f){
+        while(true){
             client = server.accept();
             System.out.println("Connection established.");
             new Thread(new Controller(client)).start();
         }
-        server.close();
     }
 }

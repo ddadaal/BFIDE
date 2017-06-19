@@ -1,10 +1,12 @@
 package viccrubs.bfide.client.controller;
 
 import com.google.gson.Gson;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import viccrubs.bfide.bfmachine.exception.*;
@@ -14,6 +16,7 @@ import viccrubs.bfide.client.model.Log;
 import viccrubs.bfide.client.model.LogType;
 import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.bfmachine.ProgramLanguage;
+import viccrubs.bfide.client.undo.UndoController;
 import viccrubs.bfide.model.ProjectInfo;
 import viccrubs.bfide.model.User;
 import viccrubs.bfide.model.Version;
@@ -29,7 +32,6 @@ public class MainWindowController  {
 
     private static final String SWITCH_LANGUAGE = "Language switched to ";
     private static final String LOG_OUT = "Logged out.";
-
 
 
     public User getUser() {
@@ -74,6 +76,7 @@ public class MainWindowController  {
     private Stage appStage;
     private ProjectInfo currentProject;
     private Version currentVersion;
+    private UndoController undoController = new UndoController();
 
     @FXML
     private MenuItem miSave;
@@ -100,22 +103,40 @@ public class MainWindowController  {
     private Menu menuVersionControl;
     @FXML
     private Text textCurrentProject;
+    @FXML
+    private Button btnUndo;
+    @FXML
+    private Button btnRedo;
 
-    public void switchLanguage(){
-//        if (language.equals(ProgramLanguage.BF)){
-//            setLanguage(ProgramLanguage.Ook);
-//
-//        }else{
-//            setLanguage(ProgramLanguage.BF);
-//        }
-//        addLog(SWITCH_LANGUAGE+language.toString()+".");
-    }
 
     @FXML
     public void initialize(){
         setLanguage(ProgramLanguage.BF);
         textStatus.setText(appLog.getLogList().get(appLog.getLogList().size()-1).getDescription());
         setCurrentProjectName("Get Started by Opening or Creating a New Project");
+        textCode.textProperty().addListener(((observable, oldValue, newValue) -> {
+            undoController.add(newValue);
+            judgeUndoRedoAvailability();
+        }));
+    }
+
+    public void judgeUndoRedoAvailability(){
+        btnUndo.setDisable(!undoController.canUndo());
+        btnRedo.setDisable(!undoController.canRedo());
+    }
+
+    public void redo(){
+        undoController.redo().ifPresent(x->{
+            textCode.setText(x);
+            judgeUndoRedoAvailability();
+        });
+    }
+
+    public void undo(){
+        undoController.undo().ifPresent(x->{
+            textCode.setText(x);
+            judgeUndoRedoAvailability();
+        });
     }
 
     public void openOpenDialog(){
@@ -164,7 +185,8 @@ public class MainWindowController  {
     public void setCurrentVersion(Version version){
         GetASpecificVersionResponse res = (GetASpecificVersionResponse)connection.sendRequest(new GetASpecificVersionRequest(currentProject, version));
         if (res!=null){
-            this.textCode.setText(res.content);
+            textCode.setText(res.content);
+            undoController.initialize(res.content);
             textCurrentProject.setText(textCurrentProject.getText().split("@")[0]+"@"+ DateUtil.format(res.version.version));
             currentVersion = res.version;
         }
