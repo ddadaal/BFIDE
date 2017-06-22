@@ -14,7 +14,7 @@ public class UndoController {
     private List<String> history = new ArrayList<>();
     private int pointer = 0;
     private boolean ignoreNextAddition = false;
-    private final int MAX_HISTORY = 20;
+    private final int MAX_HISTORY = 50;
 
     public void add(String newContent){
         if (history.size()>MAX_HISTORY){

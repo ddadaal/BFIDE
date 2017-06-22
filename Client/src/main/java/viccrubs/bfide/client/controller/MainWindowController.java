@@ -231,14 +231,14 @@ public class MainWindowController  {
         RunProgramRequest request = new RunProgramRequest(textCode.getText(), input, language);
         ExecutionResponse response = (ExecutionResponse)connection.sendRequest(request);
         if (response.result.exception != null){
-            handleException(response.result.exception);
+            handleExecutionException(response.result.exception);
         }else{
             textOutput.setText(response.result.output);
         }
 
     }
 
-    public void handleException(BFMachineException exception){
+    public void handleExecutionException(BFMachineException exception){
 
         Gson gson = ConfiguredGson.get();
         exception = gson.fromJson(gson.toJson(exception), BFMachineException.class);
@@ -267,7 +267,9 @@ public class MainWindowController  {
         if (res.success){
             addLog("Saved successfully.",LogType.Success);
             addVersionToMenu(res.latestVersion);
-            updateProjectInfo();
+            setCurrentVersion(res.latestVersion);
+        }else{
+            addLog("Not saved. Nothing has been changed.");
         }
     }
 

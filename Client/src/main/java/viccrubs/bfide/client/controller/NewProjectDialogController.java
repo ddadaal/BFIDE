@@ -58,9 +58,9 @@ public class NewProjectDialogController {
                 onCancel();
             }
         }else{
-            if (res.description.equals("Project already exists.")){
+            if (res.description.equals("Project exists.")){
                 Alert alertDialog = new Alert(Alert.AlertType.ERROR);
-                alertDialog.setContentText("Project already exists.");
+                alertDialog.setContentText("Project exists.");
                 alertDialog.setHeaderText(null);
                 alertDialog.showAndWait();
             }else{

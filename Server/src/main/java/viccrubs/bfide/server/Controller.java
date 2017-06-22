@@ -6,9 +6,11 @@ import viccrubs.bfide.bfmachine.exception.UnknownInstructionException;
 import viccrubs.bfide.model.*;
 import viccrubs.bfide.model.request.*;
 import viccrubs.bfide.model.response.*;
+import viccrubs.bfide.server.storage.ProjectManager;
 import viccrubs.bfide.server.storage.UserManager;
-import viccrubs.bfide.server.storage.authentication.Authentication;
-import viccrubs.bfide.server.storage.authentication.Register;
+import viccrubs.bfide.server.storage.exception.ProjectExistsException;
+import viccrubs.bfide.server.storage.exception.ProjectNotExistException;
+import viccrubs.bfide.server.storage.exception.UserExistsException;
 import viccrubs.bfide.util.ConfiguredGson;
 
 import java.io.PrintStream;
@@ -24,7 +26,7 @@ public class Controller implements Runnable {
     private BFMachine machine;
     private PrintStream out;
     private Scanner inScanner;
-    private UserManager userManager;
+    private ProjectManager projectManager;
     private Gson gson;
     private User currentUser;
 
@@ -53,7 +55,7 @@ public class Controller implements Runnable {
             boolean terminate = false;
 
             //auth
-            Authentication auth = new Authentication();
+            UserManager auth = new UserManager();
 
 
 
@@ -65,6 +67,9 @@ public class Controller implements Runnable {
                         output(new RequireLoginResponse());
                     }else{
                         try{
+                            if (trueRequest.program==null){
+                                continue;
+                            }
                             Program program = Program.translateProgram(trueRequest.program, trueRequest.language);
                             ExecutionResult result = machine.execute(program, trueRequest.input);
                             output(new ExecutionResponse(result));
@@ -84,34 +89,37 @@ public class Controller implements Runnable {
                     output(new LoginResponse(currentUser!=null, currentUser));
                     if (currentUser!=null){
                         machine = new BFMachine();
-                        userManager = new UserManager(currentUser);
+                        projectManager = new ProjectManager(currentUser);
                     }
                 } else if (request instanceof RegisterRequest) {
                     RegisterRequest trueRequest = (RegisterRequest) request;
-                    if (Register.register(trueRequest.username, trueRequest.password).isPresent()) {
-                        output(new RegisterResponse(true));
-                        auth.updateUsers();
-                    }else{
-                        output(new RegisterResponse(false));
+                    try{
+                        User user = auth.register(trueRequest.username, trueRequest.password);
+                        output(new RegisterResponse(true,""));
+                    }catch (UserExistsException ex){
+                        output(new RegisterResponse(false, "User exists."));
+                    }catch(Exception ex){
+                        output(new RegisterResponse(false, ""));
                     }
+
                 } else if (request instanceof GetProjectInfoRequest){
                     GetProjectInfoRequest trueRequest = (GetProjectInfoRequest)request;
-                    if (!userManager.projectExists(trueRequest.projectName)){
+                    if (!projectManager.projectExists(trueRequest.projectName)){
                         output(new GetProjectInfoResponse(null));
                     }else{
-                        output(new GetProjectInfoResponse(userManager.getProjectInfo(trueRequest.projectName)));
+                        output(new GetProjectInfoResponse(projectManager.getProjectInfo(trueRequest.projectName)));
                     }
                 } else if (request instanceof SaveVersionRequest){
                     SaveVersionRequest trueRequest = (SaveVersionRequest)request;
-                    ProjectInfo info = userManager.getProjectInfo(trueRequest.project.projectName);
+                    ProjectInfo info = projectManager.getProjectInfo(trueRequest.project.projectName);
                     if (info==null){
                         output(new SaveVersionResponse(false,null));
                         continue;
                     }
                     Version latestVersion = info.latestVersion;
-                    String latestContent = userManager.getContentOfAVersion(info,latestVersion).trim();
+                    String latestContent = projectManager.getContentOfAVersion(info,latestVersion).trim();
                     if (latestVersion == null || !trueRequest.content.trim().equals(latestContent)){
-                        latestVersion = userManager.createNewVersion(info, trueRequest.content, new Version(trueRequest.timestamp));
+                        latestVersion = projectManager.createNewVersion(info, trueRequest.content, new Version(trueRequest.timestamp));
                         output(new SaveVersionResponse(true, latestVersion));
 
                     }else {
@@ -119,20 +127,26 @@ public class Controller implements Runnable {
                     }
                 } else if (request instanceof CreateNewProjectRequest){
                     CreateNewProjectRequest trueRequest = (CreateNewProjectRequest)request;
-                    if (userManager.projectExists(trueRequest.projectName)){
-                        output(new CreateNewProjectResponse(false,null, "Project already exists."));
+                    if (projectManager.projectExists(trueRequest.projectName)){
+                        output(new CreateNewProjectResponse(false,null, ProjectExistsException.description));
                     }else{
-                        ProjectInfo info = userManager.createNewProject(trueRequest.projectName, trueRequest.language);
+                        ProjectInfo info = projectManager.createNewProject(trueRequest.projectName, trueRequest.language);
                         output(new CreateNewProjectResponse(info!=null,info, ""));
                     }
                 } else if (request instanceof GetAllProjectsRequest){
-                    output(new GetAllProjectsResponse(userManager.getAllProjects()));
+                    output(new GetAllProjectsResponse(projectManager.getAllProjects()));
                 } else if (request instanceof  GetASpecificVersionRequest){
                     GetASpecificVersionRequest trueRequest = (GetASpecificVersionRequest)request;
-                    output(new GetASpecificVersionResponse(userManager.getContentOfAVersion(trueRequest.projectInfo, trueRequest.version), trueRequest.version));
+                    output(new GetASpecificVersionResponse(projectManager.getContentOfAVersion(trueRequest.projectInfo, trueRequest.version), trueRequest.version));
                 } else if (request instanceof  DeleteProjectRequest){
                     DeleteProjectRequest trueRequest = (DeleteProjectRequest)request;
-                    output(new DeleteProjectResponse(userManager.deleteProject(trueRequest.projectInfo),""));
+                    try{
+                        projectManager.deleteProject(trueRequest.projectInfo);
+                        output(new DeleteProjectResponse(true, ""));
+                    }catch(ProjectNotExistException ex){
+                        output(new DeleteProjectResponse(false, ProjectNotExistException.description));
+                    }
+
                 }
 
                 else{

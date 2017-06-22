@@ -99,9 +99,9 @@ public class OpenProjectDialogController {
     }
 
     public Optional<ProjectInfo> getSelected(){
-        TableView.TableViewSelectionModel<ProjectInfoModel> selected = projectTable.getSelectionModel();
+        ProjectInfoModel selected = projectTable.getSelectionModel().getSelectedItem();
         if (selected!=null){
-            return Optional.of(selected.getSelectedItem().toProjectInfo());
+            return Optional.of(selected.toProjectInfo());
         }else{
             return Optional.empty();
         }
@@ -112,7 +112,7 @@ public class OpenProjectDialogController {
         if (info==null){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
-            alert.setContentText("Please select one");
+            alert.setContentText("Please select one.");
             alert.showAndWait();
             return;
         }
@@ -121,7 +121,7 @@ public class OpenProjectDialogController {
         alert.setHeaderText(null);
         alert.setContentText("You are going to delete project "+info.projectName+". Are you sure?");
         Optional<ButtonType> result = alert.showAndWait();
-        if (!result.get().equals(ButtonType.OK)) {
+        if (result.isPresent() && !result.get().equals(ButtonType.OK)) {
             return;
         }
 
@@ -144,7 +144,7 @@ public class OpenProjectDialogController {
     public static OpenProjectDialogController open(){
         try {
             Stage stage= new Stage();
-            stage.setTitle("Open New Project");
+            stage.setTitle("Open a Project");
 
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainClient.class.getResource("/fxml/OpenProjectDialog.fxml"));

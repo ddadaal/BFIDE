@@ -6,8 +6,10 @@ package viccrubs.bfide.model.response;
 public class RegisterResponse extends Response {
 
     public final boolean success;
+    public final String description;
 
-    public RegisterResponse(boolean success){
+    public RegisterResponse(boolean success, String description){
         this.success= success;
+        this.description = description;
     }
 }

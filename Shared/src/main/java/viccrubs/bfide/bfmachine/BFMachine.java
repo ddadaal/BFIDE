@@ -25,7 +25,7 @@ public class BFMachine {
     public ExecutionResult execute(Program program, String input){
         resetStates();
         states.setProgram(program);
-        states.input = input;
+        states.input = input==null ?"" :input;
         long startTime = System.currentTimeMillis();
         while(stepOver()){
             if (occurredException!=null){
