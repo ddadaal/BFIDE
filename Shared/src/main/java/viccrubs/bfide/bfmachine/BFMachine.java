@@ -94,17 +94,14 @@ public class BFMachine {
                         }
                     }
                 } else {
-                    this.states.cycleStack.push(this.states.programCounter - 1);
+                    this.states.cycleStack.push(this.states.programCounter-1);
                 }
                 break;
             case ']':
                 if (this.states.cycleStack.empty()){
                     this.occurredException = new LoopStackEmptyException(states);
                 }
-                if (this.states.array[this.states.arrayPointer] != 0) {
-                    this.states.programCounter = this.states.cycleStack.pop();
-                }
-
+                this.states.programCounter = this.states.cycleStack.pop();
                 break;
             default:
 
