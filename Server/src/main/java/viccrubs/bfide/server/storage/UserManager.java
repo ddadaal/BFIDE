@@ -21,19 +21,9 @@ import java.util.stream.Stream;
  * Created by viccrubs on 2017/5/10.
  */
 public class UserManager {
-    private List<User> users = new ArrayList<>();
-
-    public UserManager(){
-        updateUsers();
 
 
-    }
-
-    public List<User> getUsers(){
-        return users;
-    }
-
-    public void updateUsers(){
+    public User[] getUsers(){
         URL credentialFile = getClass().getResource(Utils.pathCombine(Configurations.rootAuthenticationDirectory, Configurations.credentialFileName));
         try {
 
@@ -41,17 +31,19 @@ public class UserManager {
 
             Gson gson = new Gson();
 
-            users = gson.fromJson(reader, new TypeToken<List<User>>(){}.getType());
+            User[] users = gson.fromJson(reader, User[].class);
             reader.close();
+            return users;
 
 
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
     public Optional<User> authenticate(String username, String password){
-        for(User user: users){
+        for(User user: getUsers()){
             if (username.equals(user.username)){
                 if (password.equals(user.password)){
                     return Optional.of(user);
@@ -70,18 +62,19 @@ public class UserManager {
         User newUser = new User();
         newUser.username = username;
         newUser.password = password;
-        users.add(newUser);
         Gson gson = ConfiguredGson.get();
+
+        User[] newUsers = Utils.concat(getUsers(),new User[]{newUser});
+
         try {
             File file = new File(Utils.getFileUri(Utils.pathCombine(Configurations.rootAuthenticationDirectory, Configurations.credentialFileName)));
             FileWriter writer = new FileWriter(file);
-            writer.write(gson.toJson(users));
+            writer.write(gson.toJson(newUsers));
             writer.write(System.lineSeparator());
             writer.close();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        updateUsers();
 
         return newUser;
 
@@ -89,7 +82,7 @@ public class UserManager {
 
     public boolean usernameExists(String username){
 
-        return users.stream().anyMatch(x->x.username.equals(username));
+        return Arrays.stream(getUsers()).anyMatch(x->x.username.equals(username));
     }
 
 }

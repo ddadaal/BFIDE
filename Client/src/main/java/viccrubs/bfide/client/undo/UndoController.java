@@ -27,6 +27,10 @@ public class UndoController {
             return;
         }
 
+        if (history.size()==0){
+            history.add("");
+        }
+
         if (!history.get(pointer).equals(newContent)){
             if (history.size()==pointer+1){
                 history.add(newContent);

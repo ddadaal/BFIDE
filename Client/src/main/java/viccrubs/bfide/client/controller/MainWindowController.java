@@ -144,7 +144,7 @@ public class MainWindowController  {
         if (controller!=null){
             controller.setConnection(connection);
             controller.registerOnProjectSelect(this::setCurrentProject);
-            controller.registerOnCreateProject(this::openNewDialog);
+            controller.registerOnProjectCreate(this::openNewDialog);
         }
 
     }

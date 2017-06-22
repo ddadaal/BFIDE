@@ -25,17 +25,25 @@ public class ProjectManager {
 
     private String userDirectoryAbsolutePath;
     private File userDirectory;
-    private List<ProjectInfo> allProjects = new ArrayList<>();
 
     public ProjectManager(User user){
         this.userDirectoryAbsolutePath = getUserDirectory(user);
         userDirectory = new File(userDirectoryAbsolutePath);
         userDirectory.mkdirs();
-        updateProjects();
     }
 
     public ProjectInfo[] getAllProjects(){
-        return allProjects.toArray(new ProjectInfo[allProjects.size()]);
+        return Arrays.stream(userDirectory.listFiles()).filter(File::isDirectory).map(File::getName)
+                .map(x->x.split("\\.")[0])
+                .map(x -> {
+                    try {
+                        return getProjectInfo(x);
+                    } catch (ProjectNotExistException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .toArray(ProjectInfo[]::new);
     }
 
 
@@ -44,16 +52,7 @@ public class ProjectManager {
     }
 
 
-    public void updateProjects(){
-        allProjects = Arrays.stream(userDirectory.listFiles()).filter(File::isDirectory).map(File::getName).map(x->new ProjectInfo(
-                x.split("\\.")[0],
-                ProgramLanguage.valueOf(x.split("\\.")[1]),
-                getAllVersionsOfAProject(x.split("\\.")[0]),
-                getLatestVersionOfAProject(x.split("\\.")[0])
-        )).collect(Collectors.toList());
-    }
-
-    public Version[] getAllVersionsOfAProject(String projectName){
+    public Version[] getAllVersionsOfAProject(String projectName) throws ProjectNotExistException {
         File projectFolder = new File(getProjectPath(projectName));
         if (!projectFolder.exists()){
             return null;
@@ -61,11 +60,11 @@ public class ProjectManager {
         return Arrays.stream(projectFolder.listFiles()).map(x->new Version(Long.parseLong(x.getName()))).toArray(Version[]::new);
     }
 
-    public Version getLatestVersionOfAProject(String projectName) {
+    public Version getLatestVersionOfAProject(String projectName) throws ProjectNotExistException {
         return Arrays.stream(getAllVersionsOfAProject(projectName)).sorted(Comparator.comparingLong(x->-x.timeStamp)).findFirst().orElse(null);
     }
 
-    public String getContentOfAVersion(ProjectInfo info, Version version){
+    public String getContentOfAVersion(ProjectInfo info, Version version) throws ProjectNotExistException {
         try {
             return Utils.downloadContentViaAbsolutePath(
                     Utils.pathCombine(getProjectPath(info.projectName), version.timeStamp+""));
@@ -97,26 +96,24 @@ public class ProjectManager {
         }
     }
 
-    public void deleteProject(ProjectInfo projectInfo) throws ProjectNotExistException{
+    public boolean deleteProject(ProjectInfo projectInfo) throws ProjectNotExistException{
 
         //TODO: Deletion not working
         if (!projectExists(projectInfo.projectName)){
             throw new ProjectNotExistException();
         }
 
-        allProjects.remove(projectInfo);
-
         File path = new File(getProjectPath(projectInfo.projectName));
 
-        for(File f : path.listFiles()){
-            f.delete();
-        }
-
-        path.delete();
+        return Arrays.stream(path.listFiles()).map(File::delete).reduce(true, (x, y)->x&&y) && path.delete();
     }
 
     public ProjectInfo getProjectInfo(String projectName) throws ProjectNotExistException {
-        return allProjects.stream().filter(x->x.projectName.equals(projectName)).findFirst().orElseThrow(ProjectNotExistException::new);
+        String[] splitFileName = getProjectFullName(projectName).split("\\.");
+        return new ProjectInfo(projectName,
+                ProgramLanguage.valueOf(splitFileName[splitFileName.length-1]),
+                getAllVersionsOfAProject(projectName),
+                getLatestVersionOfAProject(projectName));
     }
 
     public Version createNewVersion(ProjectInfo info, String content, Version version) throws ProjectNotExistException {
@@ -130,7 +127,6 @@ public class ProjectManager {
         File newVersion = new File(Utils.pathCombine(userDirectory.getAbsolutePath(), getProjectFullName(info.projectName), String.valueOf(version.timeStamp)));
         try(FileWriter writer = new FileWriter(newVersion,false)){
             writer.write(content);
-            updateProjects();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -151,9 +147,9 @@ public class ProjectManager {
         return null;
     }
 
-    public String getProjectPath(String projectName){
+    public String getProjectPath(String projectName) throws ProjectNotExistException{
         if (!projectExists(projectName)){
-            return null;
+            throw new ProjectNotExistException();
         }
         return Utils.pathCombine(userDirectoryAbsolutePath, getProjectFullName(projectName));
     }

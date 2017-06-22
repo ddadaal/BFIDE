@@ -68,6 +68,7 @@ public class Controller implements Runnable {
                     }else{
                         try{
                             if (trueRequest.program==null){
+                                output(new ExecutionResponse(new ExecutionResult("",null,0)));
                                 continue;
                             }
                             Program program = Program.translateProgram(trueRequest.program, trueRequest.language);

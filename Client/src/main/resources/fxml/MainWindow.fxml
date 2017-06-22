@@ -53,15 +53,16 @@
               </items>
             </MenuButton>
             <Button fx:id="btnRunWithoutInput" disable="true" layoutX="58.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#onRunWithoutInputClicked" text="Run without Input" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
-            <Text fx:id="textCurrentProject" layoutX="337.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="10.0" />
-            <Button fx:id="btnUndo" disable="true" layoutX="193.0" layoutY="6.0" mnemonicParsing="false" onAction="#undo" text="Undo" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
-            <Button fx:id="btnRedo" disable="true" layoutX="256.0" layoutY="5.0" mnemonicParsing="false" onAction="#redo" text="Redo" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="btnUndo" disable="true" layoutX="256.0" layoutY="4.0" mnemonicParsing="false" onAction="#undo" text="Undo" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="btnRedo" disable="true" layoutX="315.0" layoutY="5.0" mnemonicParsing="false" onAction="#redo" text="Redo" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="btnSave" disable="true" layoutX="190.0" layoutY="5.0" mnemonicParsing="false" onAction="#save" text="Save" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="548.0" prefHeight="25.0" prefWidth="611.0" AnchorPane.bottomAnchor="0.0">
          <children>
             <Text fx:id="textStatus" layoutX="8.0" layoutY="17.0" onMouseClicked="#showLogs" strokeType="OUTSIDE" strokeWidth="0.0" text="Ready" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
             <Text fx:id="textLanguage" layoutX="542.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Language" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+            <Text fx:id="textCurrentProject" layoutX="254.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
          </children>
       </AnchorPane>
       <TextArea fx:id="textCode" editable="false" layoutY="60.0" prefHeight="248.0" prefWidth="611.0" promptText="Code here" wrapText="true" />

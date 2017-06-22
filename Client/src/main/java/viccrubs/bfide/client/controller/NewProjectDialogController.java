@@ -58,17 +58,11 @@ public class NewProjectDialogController {
                 onCancel();
             }
         }else{
-            if (res.description.equals("Project exists.")){
                 Alert alertDialog = new Alert(Alert.AlertType.ERROR);
-                alertDialog.setContentText("Project exists.");
+                alertDialog.setContentText("An error occurred."+System.lineSeparator()+res.description);
                 alertDialog.setHeaderText(null);
                 alertDialog.showAndWait();
-            }else{
-                Alert alertDialog = new Alert(Alert.AlertType.ERROR);
-                alertDialog.setContentText("An error occurred.");
-                alertDialog.setHeaderText(null);
-                alertDialog.showAndWait();
-            }
+
         }
     }
 
