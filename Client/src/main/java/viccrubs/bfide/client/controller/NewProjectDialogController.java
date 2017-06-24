@@ -18,9 +18,6 @@ import viccrubs.bfide.model.response.CreateNewProjectResponse;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-/**
- * Created by viccrubs on 2017/6/13.
- */
 public class NewProjectDialogController {
     @FXML
     private TextField tfProjectName;

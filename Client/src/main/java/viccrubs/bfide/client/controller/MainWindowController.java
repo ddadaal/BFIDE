@@ -14,7 +14,7 @@ import viccrubs.bfide.client.model.Log;
 import viccrubs.bfide.client.model.LogType;
 import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.bfmachine.program.ProgramLanguage;
-import viccrubs.bfide.client.undo.UndoController;
+import viccrubs.bfide.client.undoredo.UndoRedoController;
 import viccrubs.bfide.model.ProjectInfo;
 import viccrubs.bfide.model.User;
 import viccrubs.bfide.model.Version;
@@ -74,7 +74,7 @@ public class MainWindowController  {
     private Stage appStage;
     private ProjectInfo currentProject;
     private Version currentVersion;
-    private UndoController undoController = new UndoController();
+    private UndoRedoController undoController = new UndoRedoController();
 
     @FXML
     private MenuItem miSave;
