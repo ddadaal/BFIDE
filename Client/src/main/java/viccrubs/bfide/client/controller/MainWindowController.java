@@ -1,12 +1,10 @@
 package viccrubs.bfide.client.controller;
 
 import com.google.gson.Gson;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import viccrubs.bfide.bfmachine.exception.*;
@@ -15,7 +13,7 @@ import viccrubs.bfide.client.log.ApplicationLog;
 import viccrubs.bfide.client.model.Log;
 import viccrubs.bfide.client.model.LogType;
 import viccrubs.bfide.client.socket.Connection;
-import viccrubs.bfide.bfmachine.ProgramLanguage;
+import viccrubs.bfide.bfmachine.program.ProgramLanguage;
 import viccrubs.bfide.client.undo.UndoController;
 import viccrubs.bfide.model.ProjectInfo;
 import viccrubs.bfide.model.User;
@@ -185,8 +183,9 @@ public class MainWindowController  {
     public void setCurrentVersion(Version version){
         GetASpecificVersionResponse res = (GetASpecificVersionResponse)connection.sendRequest(new GetASpecificVersionRequest(currentProject, version));
         if (res!=null){
-            textCode.setText(res.content);
             undoController.initialize(res.content);
+            textCode.setText(res.content);
+
             textCurrentProject.setText(textCurrentProject.getText().split("@")[0]+"@"+ DateUtil.format(res.version.version));
             currentVersion = res.version;
         }
@@ -224,12 +223,20 @@ public class MainWindowController  {
     }
 
     public void onRunClicked(){
+
         executeProgram(textInput.getText());
     }
 
     public void executeProgram(String input){
-        RunProgramRequest request = new RunProgramRequest(textCode.getText(), input, language);
-        ExecutionResponse response = (ExecutionResponse)connection.sendRequest(request);
+        if (textCode.getText().length()==0){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setContentText("Please input something.");
+            alert.showAndWait();
+            return;
+        }
+        ExecuteProgramRequest request = new ExecuteProgramRequest(textCode.getText().replace("\r\n","\n"), input, language);
+        ExecuteProgramResponse response = (ExecuteProgramResponse)connection.sendRequest(request);
         if (response.result.exception != null){
             handleExecutionException(response.result.exception);
         }else{
@@ -244,7 +251,7 @@ public class MainWindowController  {
         exception = gson.fromJson(gson.toJson(exception), BFMachineException.class);
 
         textOutput.setText("Exception "+exception.type+" occurred.");
-        addLog("Exception "+exception.type+" occurred.", LogType.Error);
+        addLog(exception.type, LogType.Error);
 
         if (exception instanceof InputTooShortException){
             textOutput.setText("Insufficient input. Check your input.");
@@ -253,7 +260,7 @@ public class MainWindowController  {
         } else if (exception instanceof DataArrayOutOfIndexException){
             textOutput.setText("Data array out of index. Currently machine can only hold 256 bytes.");
         } else if (exception instanceof UnknownInstructionException){
-            textOutput.setText("Unknown instruction detected. Check your code.");
+            textOutput.setText("Unknown instruction "+((UnknownInstructionException) exception).instruction+" detected. Check your code.");
         }
     }
 

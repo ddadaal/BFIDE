@@ -1,6 +1,6 @@
 package viccrubs.bfide.model.request;
 
-import viccrubs.bfide.bfmachine.ProgramLanguage;
+import viccrubs.bfide.bfmachine.program.ProgramLanguage;
 
 /**
  * Created by viccrubs on 2017/6/1.

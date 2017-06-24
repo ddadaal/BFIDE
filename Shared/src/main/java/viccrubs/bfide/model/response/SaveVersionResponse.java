@@ -7,11 +7,13 @@ import viccrubs.bfide.model.Version;
  */
 public class SaveVersionResponse extends Response {
     public final boolean success;
+    public final String description;
 
     public final Version latestVersion;
 
-    public SaveVersionResponse(boolean success, Version latestVersion) {
+    public SaveVersionResponse(boolean success, String description, Version latestVersion) {
         this.success = success;
+        this.description = description;
         this.latestVersion = latestVersion;
     }
 }

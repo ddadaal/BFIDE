@@ -1,7 +1,7 @@
 package viccrubs.bfide.model;
 
 import com.google.gson.annotations.Expose;
-import viccrubs.bfide.bfmachine.ProgramLanguage;
+import viccrubs.bfide.bfmachine.program.ProgramLanguage;
 
 import java.util.Arrays;
 

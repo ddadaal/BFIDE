@@ -44,7 +44,6 @@ public class AboutController {
                 dp.browse(uri);
             }
         } catch (NullPointerException | IOException e) {
-            // 此为uri为空时抛出异常
             e.printStackTrace();
         }
     }

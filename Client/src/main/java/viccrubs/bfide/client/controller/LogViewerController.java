@@ -26,7 +26,6 @@ public class LogViewerController {
 
     @FXML
     private void initialize() {
-        // Initialize the person table with the two columns.
         descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
         timeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(DateUtil.format(cellData.getValue().getTime())));
         typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().toString()));

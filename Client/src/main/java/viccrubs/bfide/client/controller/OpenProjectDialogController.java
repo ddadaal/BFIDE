@@ -11,7 +11,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import viccrubs.bfide.bfmachine.ProgramLanguage;
+import viccrubs.bfide.bfmachine.program.ProgramLanguage;
 import viccrubs.bfide.client.MainClient;
 import viccrubs.bfide.client.model.ProjectInfoModel;
 import viccrubs.bfide.client.socket.Connection;

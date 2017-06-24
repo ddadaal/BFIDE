@@ -15,17 +15,6 @@ import java.util.stream.Collectors;
  */
 public class Utils {
 
-    public static String downloadContent(String relativeFilePath) throws IOException {
-        URL url = BFIDEServer.class.getResource(relativeFilePath);
-
-        Scanner scanner = new Scanner(url.openStream());
-        StringBuilder result = new StringBuilder();
-        while(scanner.hasNextLine()){
-            result.append(scanner.nextLine()).append(System.lineSeparator());
-        }
-        return result.toString();
-    }
-
     public static String downloadContentViaAbsolutePath(String absoluteFilePath) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(absoluteFilePath));
         StringBuilder result = new StringBuilder();

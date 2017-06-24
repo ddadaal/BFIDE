@@ -1,6 +1,7 @@
 package viccrubs.bfide.bfmachine;
 
-import com.google.gson.annotations.Expose;
+import viccrubs.bfide.bfmachine.program.Instruction;
+import viccrubs.bfide.bfmachine.program.Program;
 
 import java.util.Stack;
 

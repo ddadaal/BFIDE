@@ -1,11 +1,17 @@
 package viccrubs.bfide.server;
 
 import com.google.gson.Gson;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import viccrubs.bfide.bfmachine.*;
 import viccrubs.bfide.bfmachine.exception.UnknownInstructionException;
+import viccrubs.bfide.bfmachine.program.*;
 import viccrubs.bfide.model.*;
 import viccrubs.bfide.model.request.*;
 import viccrubs.bfide.model.response.*;
+import viccrubs.bfide.server.annotation.RequestHandler;
 import viccrubs.bfide.server.storage.ProjectManager;
 import viccrubs.bfide.server.storage.UserManager;
 import viccrubs.bfide.server.storage.exception.ProjectExistsException;
@@ -14,8 +20,13 @@ import viccrubs.bfide.server.storage.exception.UserExistsException;
 import viccrubs.bfide.util.ConfiguredGson;
 
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Created by viccrubs on 2017/5/6.
@@ -25,10 +36,10 @@ public class Controller implements Runnable {
     private Socket client = null;
     private BFMachine machine;
     private PrintStream out;
-    private Scanner inScanner;
     private ProjectManager projectManager;
     private Gson gson;
     private User currentUser;
+    private boolean terminate =false;
 
     public Controller(Socket client){
         this.client = client;
@@ -40,121 +51,168 @@ public class Controller implements Runnable {
         out.print("\r\n");
     }
 
+
+    @RequestHandler(requestType = RequestType.CreateNewProject)
+    public Response handleCreateNewProject(CreateNewProjectRequest request){
+        if (projectManager.projectExists(request.projectName)){
+            return new CreateNewProjectResponse(false,null, ProjectExistsException.description);
+        }else{
+            ProjectInfo info = null;
+            try {
+                info = projectManager.createNewProject(request.projectName, request.language);
+            } catch (ProjectExistsException e) {
+                return new CreateNewProjectResponse(false,null, ProjectExistsException.description);
+            }
+            return new CreateNewProjectResponse(info!=null,info, "");
+        }
+    }
+
+    @RequestHandler(requestType = RequestType.DeleteProject)
+    public Response handleDeleteProject(DeleteProjectRequest request){
+        try{
+            projectManager.deleteProject(request.projectInfo);
+            return new DeleteProjectResponse(true, "");
+        }catch(ProjectNotExistException ex){
+            return new DeleteProjectResponse(false, ProjectNotExistException.description);
+        }
+
+    }
+
+    @RequestHandler(requestType =  RequestType.GetAllProjects)
+    public Response handleGetAllProjects(GetAllProjectsRequest request){
+        return new GetAllProjectsResponse(projectManager.getAllProjects());
+    }
+
+    @RequestHandler(requestType = RequestType.GetASpecificVersion)
+    public Response handleGetASpecificVersion(GetASpecificVersionRequest request){
+        try {
+            return new GetASpecificVersionResponse(projectManager.getContentOfAVersion(request.projectInfo, request.version), request.version);
+        } catch (ProjectNotExistException e) {
+            return new GetASpecificVersionResponse(null,request.version);
+        }
+    }
+
+    @RequestHandler(requestType = RequestType.GetProjectInfo)
+    public Response handleGetProjectInfo(GetProjectInfoRequest request){
+        try {
+            return new GetProjectInfoResponse(projectManager.getProjectInfo(request.projectName));
+        } catch (ProjectNotExistException e) {
+           return new GetProjectInfoResponse(null);
+        }
+    }
+
+    @RequestHandler(requestType = RequestType.Login)
+    public Response handleLogin(LoginRequest request){
+        UserManager auth = new UserManager();
+
+        currentUser = auth.authenticate(request.username, request.password).orElse(null);
+
+        if (currentUser!=null){
+            machine = new BFMachine();
+            projectManager = new ProjectManager(currentUser);
+            return new LoginResponse(true,currentUser);
+        }
+        return new LoginResponse(false, null);
+    }
+
+    @RequestHandler(requestType = RequestType.Register)
+    public Response handleRegister(RegisterRequest request){
+        UserManager auth = new UserManager();
+        try{
+            User user = auth.register(request.username, request.password);
+            return new RegisterResponse(true,"");
+        }catch (UserExistsException ex){
+            return new RegisterResponse(false, UserExistsException.description);
+        }catch(Exception ex){
+            return new RegisterResponse(false, "");
+        }
+    }
+
+    @RequestHandler(requestType = RequestType.ExecuteProgram)
+    public Response handleRunProgram(ExecuteProgramRequest request){
+        if (currentUser==null){
+            return new RequireLoginResponse();
+        }else{
+            try{
+                if (request.program==null){
+                    return new ExecuteProgramResponse(new ExecutionResult("",null,0));
+                }
+
+                if (request.language.equals(ProgramLanguage.BF)) {
+                    Program program = new BFTranslator(request.program).compile();
+                    ExecutionResult result = machine.execute(program, request.input);
+                    return new ExecuteProgramResponse(result);
+                }
+                else if (request.language.equals(ProgramLanguage.Ook)) {
+                    Program program = new OokTranslator(request.program).compile();
+                    ExecutionResult result = machine.execute(program, request.input);
+                    return new ExecuteProgramResponse(result);
+                }
+                else {
+                    return new ExecuteProgramResponse(new ExecutionResult("",null,0));
+                }
+            }catch (UnknownInstructionException ex){
+                return new ExecuteProgramResponse(new ExecutionResult("",ex, 0));
+            }
+        }
+    }
+
+    @RequestHandler(requestType = RequestType.SaveVersion)
+    public Response handleSaveVersion(SaveVersionRequest request){
+        try {
+            ProjectInfo info = projectManager.getProjectInfo(request.project.projectName);
+            Version latestVersion = info.latestVersion;
+            String latestContent = projectManager.getContentOfAVersion(info,latestVersion).trim();
+            if (latestVersion == null || !request.content.trim().equals(latestContent)){
+                latestVersion = projectManager.createNewVersion(info, request.content, new Version(request.timestamp));
+                return new SaveVersionResponse(true, "", latestVersion);
+            }else {
+                return new SaveVersionResponse(false, "Nothing has changed from last version.", latestVersion);
+            }
+
+        } catch (ProjectNotExistException e) {
+            return new SaveVersionResponse(false, ProjectNotExistException.description, null);
+        }
+
+    }
+    @RequestHandler(requestType = RequestType.TestConnection)
+    public Response handleTestConnection(TestConnectionRequest request){
+        return new TestConnectionResponse();
+    }
+
+    @RequestHandler(requestType = RequestType.TerminateConnection)
+    public Response handleTerminateConnection(TerminateConnectionRequest request){
+        terminate=true;
+        System.out.println("Terminating the connection.");
+        return new TerminateConnectionResponse();
+    }
+
+
+
     @Override
     public void run() {
         try {
 
-
-            //获取Socket的输出流，用来向客户端发送数据
             out = new PrintStream(client.getOutputStream());
-            //获取Socket的输入流，用来接收从客户端发送过来的数据
-            inScanner = new Scanner(client.getInputStream());
+            Scanner inScanner = new Scanner(client.getInputStream());
             inScanner.useDelimiter("\r\n");
 
-
-            boolean terminate = false;
-
-            //auth
-            UserManager auth = new UserManager();
-
-
+            Method[] methods = Arrays.stream(getClass().getMethods()).filter(x->x.isAnnotationPresent(RequestHandler.class)).toArray(Method[]::new);
 
             while (inScanner.hasNext() && !terminate) {
                 Request request = gson.fromJson(inScanner.next(), Request.class);
-                if (request instanceof RunProgramRequest) {
-                    RunProgramRequest trueRequest = (RunProgramRequest) request;
-                    if (currentUser==null){
-                        output(new RequireLoginResponse());
-                    }else{
-                        try{
-                            if (trueRequest.program==null){
-                                output(new ExecutionResponse(new ExecutionResult("",null,0)));
-                                continue;
-                            }
-                            Program program = Program.translateProgram(trueRequest.program, trueRequest.language);
-                            ExecutionResult result = machine.execute(program, trueRequest.input);
-                            output(new ExecutionResponse(result));
-                        }catch (UnknownInstructionException ex){
-                            output(new ExecutionResponse(new ExecutionResult("",ex, 0)));
+
+                for(Method method : methods){
+                    if (method.getAnnotation(RequestHandler.class).requestType().equals(request.type)){
+                        try {
+                            output((Response)method.invoke(this,request) );
+                            break;
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            e.printStackTrace();
                         }
                     }
-                } else if (request instanceof TerminateConnectionRequest) {
-                    System.out.println("Terminating the connection.");
-                    output(new TerminateConnectionResponse());
-                    terminate = true;
-                } else if (request instanceof TestConnectionRequest) {
-                    output(new TestConnectionResponse());
-                } else if (request instanceof LoginRequest) {
-                    LoginRequest user = (LoginRequest) request;
-                    currentUser = auth.authenticate(user.username, user.password).orElse(null);
-                    output(new LoginResponse(currentUser!=null, currentUser));
-                    if (currentUser!=null){
-                        machine = new BFMachine();
-                        projectManager = new ProjectManager(currentUser);
-                    }
-                } else if (request instanceof RegisterRequest) {
-                    RegisterRequest trueRequest = (RegisterRequest) request;
-                    try{
-                        User user = auth.register(trueRequest.username, trueRequest.password);
-                        output(new RegisterResponse(true,""));
-                    }catch (UserExistsException ex){
-                        output(new RegisterResponse(false, "User exists."));
-                    }catch(Exception ex){
-                        output(new RegisterResponse(false, ""));
-                    }
-
-                } else if (request instanceof GetProjectInfoRequest){
-                    GetProjectInfoRequest trueRequest = (GetProjectInfoRequest)request;
-                    if (!projectManager.projectExists(trueRequest.projectName)){
-                        output(new GetProjectInfoResponse(null));
-                    }else{
-                        output(new GetProjectInfoResponse(projectManager.getProjectInfo(trueRequest.projectName)));
-                    }
-                } else if (request instanceof SaveVersionRequest){
-                    SaveVersionRequest trueRequest = (SaveVersionRequest)request;
-                    ProjectInfo info = projectManager.getProjectInfo(trueRequest.project.projectName);
-                    if (info==null){
-                        output(new SaveVersionResponse(false,null));
-                        continue;
-                    }
-                    Version latestVersion = info.latestVersion;
-                    String latestContent = projectManager.getContentOfAVersion(info,latestVersion).trim();
-                    if (latestVersion == null || !trueRequest.content.trim().equals(latestContent)){
-                        latestVersion = projectManager.createNewVersion(info, trueRequest.content, new Version(trueRequest.timestamp));
-                        output(new SaveVersionResponse(true, latestVersion));
-
-                    }else {
-                        output(new SaveVersionResponse(false, latestVersion));
-                    }
-                } else if (request instanceof CreateNewProjectRequest){
-                    CreateNewProjectRequest trueRequest = (CreateNewProjectRequest)request;
-                    if (projectManager.projectExists(trueRequest.projectName)){
-                        output(new CreateNewProjectResponse(false,null, ProjectExistsException.description));
-                    }else{
-                        ProjectInfo info = projectManager.createNewProject(trueRequest.projectName, trueRequest.language);
-                        output(new CreateNewProjectResponse(info!=null,info, ""));
-                    }
-                } else if (request instanceof GetAllProjectsRequest){
-                    output(new GetAllProjectsResponse(projectManager.getAllProjects()));
-                } else if (request instanceof  GetASpecificVersionRequest){
-                    GetASpecificVersionRequest trueRequest = (GetASpecificVersionRequest)request;
-                    output(new GetASpecificVersionResponse(projectManager.getContentOfAVersion(trueRequest.projectInfo, trueRequest.version), trueRequest.version));
-                } else if (request instanceof  DeleteProjectRequest){
-                    DeleteProjectRequest trueRequest = (DeleteProjectRequest)request;
-                    try{
-                        projectManager.deleteProject(trueRequest.projectInfo);
-                        output(new DeleteProjectResponse(true, ""));
-                    }catch(ProjectNotExistException ex){
-                        output(new DeleteProjectResponse(false, ProjectNotExistException.description));
-                    }
-
-                }
-
-                else{
-                    out.println("WRONG COMMAND");
                 }
             }
-
             inScanner.close();
 
             out.close();

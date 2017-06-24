@@ -1,6 +1,8 @@
 package viccrubs.bfide.bfmachine;
 
 import viccrubs.bfide.bfmachine.exception.*;
+import viccrubs.bfide.bfmachine.program.Instruction;
+import viccrubs.bfide.bfmachine.program.Program;
 import viccrubs.bfide.model.ExecutionResult;
 
 /**

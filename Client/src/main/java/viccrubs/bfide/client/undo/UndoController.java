@@ -13,6 +13,7 @@ public class UndoController {
 
     private List<String> history = new ArrayList<>();
     private int pointer = 0;
+    private int maxPointer=0;
     private boolean ignoreNextAddition = false;
     private final int MAX_HISTORY = 50;
 
@@ -20,31 +21,31 @@ public class UndoController {
         if (history.size()>MAX_HISTORY){
             history.remove(0);
             pointer--;
+            maxPointer--;
         }
 
         if (ignoreNextAddition){
             ignoreNextAddition = false;
             return;
         }
-
-        if (history.size()==0){
-            history.add("");
-        }
-
         if (!history.get(pointer).equals(newContent)){
-            if (history.size()==pointer+1){
+            if (pointer==maxPointer){
                 history.add(newContent);
+                pointer++;
+                maxPointer++;
             }else{
-                history.set(pointer+1, newContent);
+                history.set(++pointer, newContent);
+                maxPointer=pointer;
             }
-            pointer++;
         }
     }
 
     public void initialize(String firstVersion){
         history.clear();
         history.add(firstVersion);
+        ignoreNextAddition=true;
         pointer=0;
+        maxPointer=0;
     }
 
     public Optional<String> undo(){
@@ -67,7 +68,7 @@ public class UndoController {
         return pointer>0;
     }
     public boolean canRedo(){
-        return pointer<history.size()-1;
+        return pointer<maxPointer;
     }
 
 

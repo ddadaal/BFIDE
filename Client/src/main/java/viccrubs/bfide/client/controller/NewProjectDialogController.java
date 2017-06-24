@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import viccrubs.bfide.bfmachine.ProgramLanguage;
+import viccrubs.bfide.bfmachine.program.ProgramLanguage;
 import viccrubs.bfide.client.MainClient;
 import viccrubs.bfide.client.socket.Connection;
 import viccrubs.bfide.model.ProjectInfo;
