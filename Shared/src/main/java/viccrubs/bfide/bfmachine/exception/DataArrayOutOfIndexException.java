@@ -9,4 +9,9 @@ public class DataArrayOutOfIndexException extends BFMachineException {
     public DataArrayOutOfIndexException(BFMachineStates machine){
         super(machine);
     }
+
+    @Override
+    public String description(){
+        return "Data Array out of index. Currently only 256 bytes are supported.";
+    }
 }

@@ -40,7 +40,7 @@
          <children>
             <Text layoutX="429.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output" />
             <TextArea fx:id="textInput" editable="false" layoutY="40.0" prefHeight="129.0" prefWidth="300.0" />
-            <TextArea fx:id="textOutput" editable="false" layoutX="308.0" layoutY="40.0" prefHeight="129.0" prefWidth="300.0" />
+            <TextArea fx:id="textOutput" editable="false" layoutX="308.0" layoutY="40.0" prefHeight="129.0" prefWidth="300.0" wrapText="true" />
             <Text layoutX="129.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input" />
          </children>
       </AnchorPane>

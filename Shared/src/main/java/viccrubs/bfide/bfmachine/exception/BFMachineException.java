@@ -14,6 +14,10 @@ public class BFMachineException extends Exception{
     }
 
 
+    public String description(){
+        return "Base Machine Exception";
+    }
+
     @Override
     public String toString(){
         if (states!=null){

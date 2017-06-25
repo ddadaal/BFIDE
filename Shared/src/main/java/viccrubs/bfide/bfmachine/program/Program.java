@@ -12,13 +12,9 @@ import java.util.List;
  */
 public class Program {
     private final Instruction[] program;
-    private final ProgramLanguage language;
-    private Translator translator;
 
-    public Program(Instruction[] program, Translator translator) {
-        this.translator = translator;
+    public Program(Instruction[] program) {
         this.program = program;
-        this.language = translator.getLanguage();
     }
 
 
@@ -26,7 +22,11 @@ public class Program {
 
     @Override
     public String toString(){
-        return Arrays.stream(program).map(x->translator.translate(x.instructionChar)).reduce("",(x,y)->x+y);
+        return toString(new BFCompiler());
+    }
+
+    public String toString(Compiler compiler){
+        return Arrays.stream(program).map(x->compiler.translate(x.instructionChar)).reduce("",(x,y)->x+y);
     }
 
     public Instruction instructionAt(int index){

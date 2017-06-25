@@ -11,4 +11,9 @@ public class UnknownInstructionException extends BFMachineException{
         super(null);
         this.instruction = instruction;
     }
+
+    @Override
+    public String description(){
+        return "Unknown instruction "+instruction+".";
+    }
 }

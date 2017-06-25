@@ -132,12 +132,12 @@ public class Controller implements Runnable {
                 }
 
                 if (request.language.equals(ProgramLanguage.BF)) {
-                    Program program = new BFTranslator(request.program).compile();
+                    Program program = new BFCompiler(request.program).compile();
                     ExecutionResult result = machine.execute(program, request.input);
                     return new ExecuteProgramResponse(result);
                 }
                 else if (request.language.equals(ProgramLanguage.Ook)) {
-                    Program program = new OokTranslator(request.program).compile();
+                    Program program = new OokCompiler(request.program).compile();
                     ExecutionResult result = machine.execute(program, request.input);
                     return new ExecuteProgramResponse(result);
                 }

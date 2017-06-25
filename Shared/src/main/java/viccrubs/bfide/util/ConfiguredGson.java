@@ -2,8 +2,6 @@ package viccrubs.bfide.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import viccrubs.bfide.bfmachine.exception.BFExceptionParser;
-import viccrubs.bfide.bfmachine.exception.BFMachineException;
 import viccrubs.bfide.model.request.Request;
 import viccrubs.bfide.model.request.RequestParser;
 import viccrubs.bfide.model.response.Response;
@@ -17,7 +15,6 @@ public class ConfiguredGson {
         return new GsonBuilder()
                 .registerTypeAdapter(Request.class, new RequestParser())
                 .registerTypeAdapter(Response.class, new ResponseParser())
-                .registerTypeAdapter(BFMachineException.class, new BFExceptionParser())
                 .create();
     }
 }

@@ -12,16 +12,13 @@ import java.util.List;
 
 
 
-public abstract class Translator implements Iterator<String>, Iterable<String> {
+public abstract class Compiler implements Iterator<String>, Iterable<String> {
 
-    protected String program;
+
+
+    protected String program = "";
+
     protected int pointer=0;
-
-    public void setProgram(String program){
-        if (program!=null){
-            this.program= program;
-        }
-    }
 
     public Program compile() throws UnknownInstructionException {
         List<Instruction> result = new ArrayList<>();
@@ -36,7 +33,11 @@ public abstract class Translator implements Iterator<String>, Iterable<String> {
         if (result.size()==0){
             throw new UnknownInstructionException(program);
         }
-        return new Program(result.toArray(new Instruction[result.size()]),this);
+        return new Program(result.toArray(new Instruction[result.size()]));
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
     }
 
     @Override

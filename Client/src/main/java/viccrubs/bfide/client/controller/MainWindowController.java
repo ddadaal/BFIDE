@@ -237,31 +237,17 @@ public class MainWindowController  {
         }
         ExecuteProgramRequest request = new ExecuteProgramRequest(textCode.getText().replace("\r\n","\n"), input, language);
         ExecuteProgramResponse response = (ExecuteProgramResponse)connection.sendRequest(request);
-        if (response.result.exception != null){
-            handleExecutionException(response.result.exception);
+        if (response.exceptionDescription != null){
+            handleExecutionException(response.exception, response.exceptionDescription);
         }else{
-            textOutput.setText(response.result.output);
+            textOutput.setText(response.output);
         }
 
     }
 
-    public void handleExecutionException(BFMachineException exception){
-
-        Gson gson = ConfiguredGson.get();
-        exception = gson.fromJson(gson.toJson(exception), BFMachineException.class);
-
-        textOutput.setText("Exception "+exception.type+" occurred.");
-        addLog(exception.type, LogType.Error);
-
-        if (exception instanceof InputTooShortException){
-            textOutput.setText("Insufficient input. Check your input.");
-        }else if (exception instanceof LoopStackEmptyException){
-            textOutput.setText("No corresponding end of loop for a start of loop. Check your code.");
-        } else if (exception instanceof DataArrayOutOfIndexException){
-            textOutput.setText("Data array out of index. Currently machine can only hold 256 bytes.");
-        } else if (exception instanceof UnknownInstructionException){
-            textOutput.setText("Unknown instruction "+((UnknownInstructionException) exception).instruction+" detected. Check your code.");
-        }
+    public void handleExecutionException(String type, String description){
+        textOutput.setText("Exception "+type+" occurred. Message from server:"+System.lineSeparator()+"-----------------------------------"+System.lineSeparator()+description);
+        addLog(type, LogType.Error);
     }
 
 

@@ -7,13 +7,18 @@ import java.util.Arrays;
 /**
  * Created by viccrubs on 2017/6/24.
  */
-public class BFTranslator extends Translator {
+public class BFCompiler extends Compiler {
 
     public String allowedChars = "><+-,.[]";
 
-    public BFTranslator(String program){
+    public BFCompiler(){
+
+    }
+
+    public BFCompiler(String program){
         setProgram(program);
     }
+
 
     @Override
     public char translate(String instruction) {

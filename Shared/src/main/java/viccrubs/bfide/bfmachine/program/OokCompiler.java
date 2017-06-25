@@ -3,11 +3,14 @@ package viccrubs.bfide.bfmachine.program;
 /**
  * Created by viccrubs on 2017/6/24.
  */
-public class OokTranslator extends Translator {
+public class OokCompiler extends Compiler {
 
     public static final int instructionLength = 8;
 
-    public OokTranslator(String ookProgram){
+    public OokCompiler(){
+
+    }
+    public OokCompiler(String ookProgram){
         setProgram(ookProgram);
     }
 

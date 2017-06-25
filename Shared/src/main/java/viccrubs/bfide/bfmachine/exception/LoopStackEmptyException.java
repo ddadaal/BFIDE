@@ -9,4 +9,8 @@ public class LoopStackEmptyException extends BFMachineException{
     public LoopStackEmptyException(BFMachineStates machine){
         super(machine);
     }
+    @Override
+    public String description(){
+        return "A start of loop without a corresponding end of loop is detected.";
+    }
 }
