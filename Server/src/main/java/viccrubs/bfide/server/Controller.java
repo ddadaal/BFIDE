@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Scanner;
 /**
  * Created by viccrubs on 2017/5/6.
@@ -33,6 +34,12 @@ public class Controller implements Runnable {
     private Gson gson;
     private User currentUser;
     private boolean terminate =false;
+    private static Hashtable<Class, Method> handlerTable = new Hashtable<>();
+    static {
+        Arrays.stream(Controller.class.getMethods()).filter(x->x.isAnnotationPresent(RequestHandler.class)).forEach(x->{
+            handlerTable.put(x.getAnnotation(RequestHandler.class).requestType().correspondingClass,x);
+        });
+    }
 
     public Controller(Socket client){
         this.client = client;
@@ -190,21 +197,9 @@ public class Controller implements Runnable {
             Scanner inScanner = new Scanner(client.getInputStream());
             inScanner.useDelimiter("\r\n");
 
-            Method[] methods = Arrays.stream(getClass().getMethods()).filter(x->x.isAnnotationPresent(RequestHandler.class)).toArray(Method[]::new);
-
             while (inScanner.hasNext() && !terminate) {
                 Request request = gson.fromJson(inScanner.next(), Request.class);
-
-                for(Method method : methods){
-                    if (method.getAnnotation(RequestHandler.class).requestType().equals(request.type)){
-                        try {
-                            output((Response)method.invoke(this,request) );
-                            break;
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                output((Response) handlerTable.get(request.type.correspondingClass).invoke(this, request));
             }
             inScanner.close();
 

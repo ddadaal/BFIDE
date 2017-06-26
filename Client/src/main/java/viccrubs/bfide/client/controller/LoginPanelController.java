@@ -77,26 +77,34 @@ public class LoginPanelController {
         textStatus.setText(appLog.getLogList().get(appLog.getLogList().size()-1).getDescription());
         tfLoginUsername.setOnKeyPressed(x->{
             if (x.getCode().equals(KeyCode.TAB)){
+                x.consume();
                 pfLoginPassword.requestFocus();
-            }else if (x.getCode().equals(KeyCode.ENTER)){
-                login();
             }
         });
         pfLoginPassword.setOnKeyPressed(x->{
-            if (x.getCode().equals(KeyCode.ENTER)){
+            if (x.getCode().equals(KeyCode.TAB)){
+                x.consume();
+                btnLogin.requestFocus();
+            }else if (x.getCode().equals(KeyCode.ENTER)){
+                x.consume();
                 login();
             }
         });
+
         tfRegisterUsername.setOnKeyPressed(x->{
             if (x.getCode().equals(KeyCode.TAB)){
+                x.consume();
                 pfRegisterPassword.requestFocus();
-            }else if (x.getCode().equals(KeyCode.ENTER)){
-                register();
             }
         });
         pfRegisterPassword.setOnKeyPressed(x->{
+
             if (x.getCode().equals(KeyCode.ENTER)){
+                x.consume();
                 register();
+            }else if (x.getCode().equals(KeyCode.TAB)){
+                x.consume();
+                btnRegister.requestFocus();
             }
         });
     }

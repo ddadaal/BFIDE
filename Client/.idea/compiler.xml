@@ -25,7 +25,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="client" target="1.8" />
       <module name="Shared" target="1.8" />
     </bytecodeTargetLevel>
   </component>
