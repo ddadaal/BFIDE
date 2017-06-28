@@ -93,6 +93,7 @@ public class OpenProjectDialogController {
 
     public void onCreateNew(){
         if (eventOnProjectCreate!=null){
+            this.stage.close();
             eventOnProjectCreate.run();
         }
     }

@@ -20,7 +20,6 @@ import viccrubs.bfide.model.User;
 import viccrubs.bfide.model.Version;
 import viccrubs.bfide.model.request.*;
 import viccrubs.bfide.model.response.*;
-import viccrubs.bfide.util.ConfiguredGson;
 import viccrubs.bfide.util.DateUtil;
 
 import java.io.IOException;
@@ -47,6 +46,7 @@ public class MainWindowController  {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+        this.connection.setOnConnectionLost(this::logout);
     }
 
     public ProgramLanguage getLanguage() {
@@ -116,6 +116,7 @@ public class MainWindowController  {
             undoController.add(newValue);
             judgeUndoRedoAvailability();
         }));
+
     }
 
     public void judgeUndoRedoAvailability(){
@@ -222,7 +223,7 @@ public class MainWindowController  {
         }
     }
 
-    public void onRunClicked(){
+    public void onRun(){
 
         executeProgram(textInput.getText());
     }
@@ -251,7 +252,7 @@ public class MainWindowController  {
     }
 
 
-    public void onRunWithoutInputClicked(){
+    public void onRunWithoutInput(){
         executeProgram("");
     }
 

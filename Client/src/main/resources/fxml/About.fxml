@@ -19,7 +19,7 @@
                   <Font size="25.0" />
                </font>
             </Text>
-            <Hyperlink layoutX="155.0" layoutY="222.0" onMouseClicked="#openHomepage" text="VicBlog" />
+            <Hyperlink layoutX="155.0" layoutY="222.0" onAction="#openHomepage" text="VicBlog" />
             <Text layoutX="126.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Victor Crubs" x="20.0" />
          </children>
       </AnchorPane>

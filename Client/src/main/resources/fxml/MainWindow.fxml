@@ -46,13 +46,13 @@
       </AnchorPane>
       <AnchorPane layoutY="25.0" prefHeight="35.0" prefWidth="608.0">
          <children>
-            <Button fx:id="btnRun" disable="true" layoutX="8.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#onRunClicked" text="Run" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="btnRun" disable="true" layoutX="8.0" layoutY="6.0" mnemonicParsing="false" onAction="#onRun" text="Run" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <MenuButton fx:id="userButton" layoutX="503.0" layoutY="3.0" mnemonicParsing="false" text="Username" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" />
               </items>
             </MenuButton>
-            <Button fx:id="btnRunWithoutInput" disable="true" layoutX="58.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#onRunWithoutInputClicked" text="Run without Input" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="btnRunWithoutInput" disable="true" layoutX="58.0" layoutY="6.0" mnemonicParsing="false" onAction="#onRunWithoutInput" text="Run without Input" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <Button fx:id="btnUndo" disable="true" layoutX="256.0" layoutY="4.0" mnemonicParsing="false" onAction="#undo" text="Undo" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <Button fx:id="btnRedo" disable="true" layoutX="315.0" layoutY="5.0" mnemonicParsing="false" onAction="#redo" text="Redo" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <Button fx:id="btnSave" layoutX="190.0" layoutY="5.0" mnemonicParsing="false" onAction="#save" text="Save" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />

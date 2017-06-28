@@ -31,12 +31,7 @@ public class Utils {
     }
 
     public static URI getFileUri(String filePath) throws URISyntaxException {
-        URL a= BFIDEServer.class.getResource(filePath);
-        if (a==null){
-            return null;
-        }else{
-            return a.toURI();
-        }
+        return BFIDEServer.class.getResource(filePath).toURI();
     }
     public static <T> T[] concat(T[] first, T[] second) {
         T[] result = Arrays.copyOf(first, first.length + second.length);

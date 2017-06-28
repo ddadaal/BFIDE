@@ -102,8 +102,9 @@ public class BFMachine {
             case ']':
                 if (this.states.cycleStack.empty()){
                     this.occurredException = new LoopStackEmptyException(states);
+                }else{
+                    this.states.programCounter = this.states.cycleStack.pop();
                 }
-                this.states.programCounter = this.states.cycleStack.pop();
                 break;
             default:
 

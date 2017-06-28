@@ -110,10 +110,21 @@ public class LoginPanelController {
     }
 
 
-    public void btnConnectOnClick(){
+    public void onConnect(){
+
+        String ipText = tfIP.getText();
+        if (!ipText.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}:[0-9]*$")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setContentText("Please enter address with correct format.");
+            alert.showAndWait();
+
+            return;
+        }
         btnConnect.setText("Connecting...");
         btnConnect.setDisable(true);
         setEnableForm(false);
+
 
 
 
@@ -128,7 +139,6 @@ public class LoginPanelController {
 
         try {
             Socket socket = new Socket(ip,port);
-
             connection = new Connection(socket);
 
             Response response = connection.sendRequest(new TestConnectionRequest());
@@ -150,7 +160,7 @@ public class LoginPanelController {
 
     }
 
-    public void btnDisconnectOnClick(){
+    public void onDisconnect(){
         btnConnect.setDisable(false);
         btnDisconnect.setDisable(true);
         setEnableForm(false);

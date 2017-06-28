@@ -27,11 +27,11 @@ import java.util.Scanner;
  */
 
 public class Controller implements Runnable {
-    private Socket client = null;
+    private Socket client;
     private BFMachine machine;
     private PrintStream out;
     private ProjectManager projectManager;
-    private Gson gson;
+    private Gson gson = ConfiguredGson.get();
     private User currentUser;
     private boolean terminate =false;
     private static Hashtable<Class, Method> handlerTable = new Hashtable<>();
@@ -43,7 +43,6 @@ public class Controller implements Runnable {
 
     public Controller(Socket client){
         this.client = client;
-        this.gson = ConfiguredGson.get();
     }
 
     public void output(Response res){
@@ -57,13 +56,13 @@ public class Controller implements Runnable {
         if (projectManager.projectExists(request.projectName)){
             return new CreateNewProjectResponse(false,null, ProjectExistsException.description);
         }else{
-            ProjectInfo info = null;
             try {
-                info = projectManager.createNewProject(request.projectName, request.language);
+                ProjectInfo info = projectManager.createNewProject(request.projectName, request.language);
+                return new CreateNewProjectResponse(info!=null,info, "");
             } catch (ProjectExistsException e) {
                 return new CreateNewProjectResponse(false,null, ProjectExistsException.description);
             }
-            return new CreateNewProjectResponse(info!=null,info, "");
+
         }
     }
 

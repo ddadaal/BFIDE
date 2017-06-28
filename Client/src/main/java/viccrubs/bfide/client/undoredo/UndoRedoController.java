@@ -29,19 +29,18 @@ public class UndoRedoController {
         }
         history.push(newContent);
     }
-
     public void initialize(String firstVersion){
         history.clear();
         redone.clear();
         history.add(firstVersion);
-        ignoreNextAddition=true;
     }
 
     public Optional<String> undo(){
         if (canUndo()){
             ignoreNextAddition = true;
             redone.push(history.pop());
-            return Optional.of(history.peek());
+
+            return Optional.of( history.peek());
         }
         return Optional.empty();
     }

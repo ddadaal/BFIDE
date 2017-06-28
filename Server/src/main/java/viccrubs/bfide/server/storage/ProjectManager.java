@@ -114,13 +114,9 @@ public class ProjectManager {
     }
 
     public Version createNewVersion(ProjectInfo info, String content, Version version) throws ProjectNotExistException {
-
-
         if (info == null || !projectExists(info.projectName)){
             throw new ProjectNotExistException();
         }
-
-
         File newVersion = new File(Utils.pathCombine(userDirectory.getAbsolutePath(), getProjectFullName(info.projectName), String.valueOf(version.timeStamp)));
         try(FileWriter writer = new FileWriter(newVersion,false)){
             writer.write(content);

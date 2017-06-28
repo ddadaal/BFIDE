@@ -14,8 +14,8 @@
          <children>
             <TextField fx:id="tfIP" layoutX="227.0" layoutY="9.0" promptText="IP Address" text="127.0.0.1:20006" />
             <Text layoutX="25.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connect to remote server" />
-            <Button fx:id="btnConnect" defaultButton="true" layoutX="416.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#btnConnectOnClick" text="Connect" />
-            <Button fx:id="btnDisconnect" disable="true" layoutX="513.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#btnDisconnectOnClick" text="Disconnect" />
+            <Button fx:id="btnConnect" defaultButton="true" layoutX="416.0" layoutY="9.0" mnemonicParsing="false" onAction="#onConnect" text="Connect" />
+            <Button fx:id="btnDisconnect" disable="true" layoutX="513.0" layoutY="9.0" mnemonicParsing="false" onAction="#onDisconnect" text="Disconnect" />
          </children>
       </AnchorPane>
       <Text layoutX="164.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to IDE!" AnchorPane.topAnchor="0.46875">
@@ -27,7 +27,7 @@
          <children>
             <Text layoutX="127.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register" AnchorPane.topAnchor="10.0" />
             <TextField fx:id="tfRegisterUsername" disable="true" layoutX="70.0" layoutY="39.0" promptText="Username" />
-            <Button fx:id="btnRegister" disable="true" layoutX="119.0" layoutY="145.0" mnemonicParsing="false" onMouseClicked="#register" text="Register" />
+            <Button fx:id="btnRegister" disable="true" layoutX="119.0" layoutY="145.0" mnemonicParsing="false" onAction="#register" text="Register" />
             <PasswordField fx:id="pfRegisterPassword" disable="true" layoutX="70.0" layoutY="85.0" promptText="Password" />
          </children>
       </AnchorPane>
@@ -35,7 +35,7 @@
          <children>
             <Text layoutX="138.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" AnchorPane.topAnchor="10.0" />
             <TextField fx:id="tfLoginUsername" disable="true" layoutX="74.0" layoutY="39.0" promptText="Username" />
-            <Button fx:id="btnLogin" disable="true" layoutX="123.0" layoutY="142.0" mnemonicParsing="false" onMouseClicked="#login" text="Login" />
+            <Button fx:id="btnLogin" disable="true" layoutX="123.0" layoutY="142.0" mnemonicParsing="false" onAction="#login" text="Login" />
             <PasswordField fx:id="pfLoginPassword" disable="true" layoutX="74.0" layoutY="85.0" promptText="Password" />
          </children>
       </AnchorPane>
@@ -44,6 +44,6 @@
             <Text fx:id="textStatus" layoutX="2.0" layoutY="22.0" onMouseClicked="#showLogs" strokeType="OUTSIDE" strokeWidth="0.0" text="Ready" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
          </children>
       </AnchorPane>
-      <Hyperlink fx:id="linkAbout" layoutX="526.0" layoutY="12.0" onMouseClicked="#openAbout" text="About" />
+      <Hyperlink fx:id="linkAbout" layoutX="526.0" layoutY="12.0" onAction="#openAbout" text="About" />
    </children>
 </AnchorPane>

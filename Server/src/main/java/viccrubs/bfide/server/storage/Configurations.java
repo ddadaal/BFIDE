@@ -1,6 +1,7 @@
 package viccrubs.bfide.server.storage;
 
 import viccrubs.bfide.server.BFIDEServer;
+import viccrubs.bfide.server.Utils;
 
 import java.io.File;
 import java.net.URI;
@@ -16,6 +17,13 @@ public class Configurations {
     public final static String rootUserDirectory = "/users";
     public final static String rootAuthenticationDirectory = "/authentication";
     public final static String credentialFileName = "credentials.json";
+    static {
+        File rootUserDirectoryPath = new File(
+                Utils.pathCombine(BFIDEServer.class.getResource("/").getPath().substring(1), "users"));
+        if (!rootUserDirectoryPath.exists()){
+            rootUserDirectoryPath.mkdir();
+        }
+    }
     public static String rootUserDirectoryAbsolutePath(){
         return BFIDEServer.class.getResource(rootUserDirectory).getPath().substring(1);
     }

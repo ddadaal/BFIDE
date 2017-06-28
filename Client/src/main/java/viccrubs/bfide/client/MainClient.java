@@ -12,40 +12,23 @@ import viccrubs.bfide.client.model.Log;
 
 public class MainClient extends Application {
 
-    private Stage mainStage;
-
     @Override
     public void start(Stage primaryStage) {
-        mainStage = primaryStage;
-        mainStage.setTitle("Login");
-
-        initRootLayout();
-
-    }
-
-    /**
-     * Initializes the root layout.
-     */
-    public void initRootLayout() {
+        primaryStage.setTitle("Login");
         try {
             new ApplicationLog().addLog(new Log("App started."));
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/LoginPanel.fxml"));
             Scene scene = new Scene(loader.load());
             LoginPanelController controller = loader.getController();
-            controller.setStage(mainStage);
-            mainStage.setScene(scene);
-
-            mainStage.show();
+            controller.setStage(primaryStage);
+            primaryStage.setScene(scene);
+            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
-
-
-
-
-
 
     public static void main(String[] args) {
         launch(args);

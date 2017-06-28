@@ -5,7 +5,7 @@ package viccrubs.bfide.bfmachine.program;
  */
 public class OokCompiler extends Compiler {
 
-    public static final int instructionLength = 8;
+    public static final int INSTRUCTION_LENGTH = 8;
 
     public OokCompiler(){
 
@@ -74,13 +74,13 @@ public class OokCompiler extends Compiler {
 
     @Override
     public boolean hasNext() {
-        return pointer<=program.length()-instructionLength;
+        return pointer<=program.length()-INSTRUCTION_LENGTH;
     }
 
     @Override
     public String next() {
-        String raw = program.substring(pointer, pointer + instructionLength);
-        pointer+=instructionLength;
+        String raw = program.substring(pointer, pointer + INSTRUCTION_LENGTH);
+        pointer+=INSTRUCTION_LENGTH;
         return raw;
     }
 }
