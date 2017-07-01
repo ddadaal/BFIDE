@@ -94,12 +94,6 @@ public class ProjectManager {
     }
 
     public boolean deleteProject(ProjectInfo projectInfo) throws ProjectNotExistException{
-
-        //TODO: Deletion not working
-        if (!projectExists(projectInfo.projectName)){
-            throw new ProjectNotExistException();
-        }
-
         File path = new File(getProjectPath(projectInfo.projectName));
 
         return Arrays.stream(path.listFiles()).map(File::delete).reduce(true, (x, y)->x&&y) && path.delete();

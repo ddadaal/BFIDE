@@ -69,7 +69,7 @@ public class Controller implements Runnable {
     @RequestHandler(requestType = RequestType.DeleteProject)
     public Response handleDeleteProject(DeleteProjectRequest request){
         try{
-            projectManager.deleteProject(request.projectInfo);
+            boolean result = projectManager.deleteProject(request.projectInfo);
             return new DeleteProjectResponse(true, "");
         }catch(ProjectNotExistException ex){
             return new DeleteProjectResponse(false, ProjectNotExistException.description);
