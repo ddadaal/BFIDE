@@ -17,7 +17,7 @@ public class ProjectInfoModel {
 
     public ProjectInfoModel(ProjectInfo info){
         projectName = new SimpleStringProperty(info.projectName);
-        latestVersion = new SimpleObjectProperty<>(DateUtil.fromTimestamp(info.latestVersion.timeStamp));
+        latestVersion = new SimpleObjectProperty<>(DateUtil.fromTimestamp(info.versions[0].timeStamp));
         versionCount = new SimpleStringProperty(info.versions.length+"");
         language = new SimpleObjectProperty<>(info.language);
         this.originalInfo = info;

@@ -21,6 +21,7 @@ public class Utils {
         while(scanner.hasNextLine()){
             result.append(scanner.nextLine()).append(System.lineSeparator());
         }
+        scanner.close();
         return result.toString();
     }
 

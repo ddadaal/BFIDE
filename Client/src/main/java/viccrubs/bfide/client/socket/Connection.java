@@ -29,7 +29,7 @@ public class Connection implements Closeable {
         try {
             this.socket = socket;
             this.reader = new Scanner(socket.getInputStream());
-            this.reader.useDelimiter("\r\n");
+            this.reader.useDelimiter("\r\n\r\n");
             this.out = new PrintStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,7 +43,7 @@ public class Connection implements Closeable {
 
     public Response sendRequest(Request request){
         out.print(gson.toJson(request));
-        out.print("\r\n");
+        out.print("\r\n\r\n");
         try{
             String raw = reader.next();
             return gson.fromJson(raw,Response.class);
@@ -68,7 +68,7 @@ public class Connection implements Closeable {
     @Override
     public void close() {
         out.print(gson.toJson(new TerminateConnectionRequest()));
-        out.print("\r\n");
+        out.print("\r\n\r\n");
         try {
             socket.close();
         } catch (IOException e) {

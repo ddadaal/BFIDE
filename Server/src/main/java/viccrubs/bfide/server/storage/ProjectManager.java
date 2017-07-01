@@ -8,10 +8,7 @@ import viccrubs.bfide.server.Utils;
 import viccrubs.bfide.server.storage.exception.ProjectExistsException;
 import viccrubs.bfide.server.storage.exception.ProjectNotExistException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -51,14 +48,7 @@ public class ProjectManager {
 
     public Version[] getAllVersionsOfAProject(String projectName) throws ProjectNotExistException {
         File projectFolder = new File(getProjectPath(projectName));
-        if (!projectFolder.exists()){
-            return null;
-        }
-        return Arrays.stream(projectFolder.listFiles()).map(x->new Version(Long.parseLong(x.getName()))).toArray(Version[]::new);
-    }
-
-    public Version getLatestVersionOfAProject(String projectName) throws ProjectNotExistException {
-        return Arrays.stream(getAllVersionsOfAProject(projectName)).sorted(Comparator.comparingLong(x->-x.timeStamp)).findFirst().orElse(null);
+        return Arrays.stream(projectFolder.listFiles()).map(x->new Version(Long.parseLong(x.getName()))).sorted(Comparator.comparingLong(x->-x.timeStamp)).toArray(Version[]::new);
     }
 
     public String getContentOfAVersion(ProjectInfo info, Version version) throws ProjectNotExistException {
@@ -78,13 +68,13 @@ public class ProjectManager {
         File newProject = new File(Utils.pathCombine(userDirectory.getAbsolutePath(), projectName + "." + language.toString()));
 
         Version firstVersion = new Version(System.currentTimeMillis());
-        ProjectInfo newInfo = new ProjectInfo(projectName,language,new Version[]{firstVersion}, firstVersion);
+        ProjectInfo newInfo = new ProjectInfo(projectName,language,new Version[]{firstVersion});
 
         if (newProject.mkdirs()) {
             try {
                 createNewVersion(newInfo, "", firstVersion);
                 return newInfo;
-            } catch (ProjectNotExistException e) {
+            } catch (ProjectNotExistException | IOException e) {
                 e.printStackTrace();
                 return null;
             }
@@ -95,30 +85,31 @@ public class ProjectManager {
 
     public boolean deleteProject(ProjectInfo projectInfo) throws ProjectNotExistException{
         File path = new File(getProjectPath(projectInfo.projectName));
-
-        return Arrays.stream(path.listFiles()).map(File::delete).reduce(true, (x, y)->x&&y) && path.delete();
+        return Arrays.stream(path.listFiles()).map(File::delete).reduce(true, (x, y) -> x && y) && path.delete();
     }
 
     public ProjectInfo getProjectInfo(String projectName) throws ProjectNotExistException {
         String[] splitFileName = getProjectFullName(projectName).split("\\.");
         return new ProjectInfo(projectName,
                 ProgramLanguage.valueOf(splitFileName[splitFileName.length-1]),
-                getAllVersionsOfAProject(projectName),
-                getLatestVersionOfAProject(projectName));
+                getAllVersionsOfAProject(projectName));
     }
 
-    public Version createNewVersion(ProjectInfo info, String content, Version version) throws ProjectNotExistException {
+    public Version createNewVersion(ProjectInfo info, String content, Version version) throws ProjectNotExistException, IOException {
         if (info == null || !projectExists(info.projectName)){
             throw new ProjectNotExistException();
         }
-        File newVersion = new File(Utils.pathCombine(userDirectory.getAbsolutePath(), getProjectFullName(info.projectName), String.valueOf(version.timeStamp)));
-        try(FileWriter writer = new FileWriter(newVersion,false)){
-            writer.write(content);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        File file = new File(Utils.pathCombine(userDirectory.getAbsolutePath(), getProjectFullName(info.projectName), String.valueOf(version.timeStamp)));
+        if (file.exists()){
             return null;
         }
-
+        if (!file.createNewFile()){
+            throw new IOException();
+        }
+        FileWriter writer = new FileWriter(file);
+        writer.write(content);
+        writer.close();
         return version;
     }
 

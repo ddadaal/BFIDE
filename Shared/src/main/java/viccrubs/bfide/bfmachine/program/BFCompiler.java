@@ -9,7 +9,7 @@ import java.util.Arrays;
  */
 public class BFCompiler extends Compiler {
 
-    public String allowedChars = "><+-,.[]";
+    public String allowedChars = "><+-,.[]\n";
 
     public BFCompiler(){
 

@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 public class MainWindowController  {
-
-    private static final String SWITCH_LANGUAGE = "Language switched to ";
     private static final String LOG_OUT = "Logged out.";
 
 
@@ -143,6 +141,7 @@ public class MainWindowController  {
         OpenProjectDialogController controller = OpenProjectDialogController.open();
         if (controller!=null){
             controller.setConnection(connection);
+            controller.setCurrentProject(currentProject);
             controller.registerOnProjectSelect(this::setCurrentProject);
             controller.registerOnProjectCreate(this::openNewDialog);
         }
@@ -160,7 +159,7 @@ public class MainWindowController  {
         this.currentProject = info;
         this.setLanguage(info.language);
         this.setCurrentProjectName(info.projectName+"@ ");
-        this.setCurrentVersion(info.latestVersion);
+        this.setCurrentVersion(info.versions[0]);
         menuVersionControl.getItems().clear();
         for(Version version: currentProject.versions){
             addVersionToMenu(version);
@@ -171,6 +170,8 @@ public class MainWindowController  {
         textInput.setEditable(true);
         miSave.setDisable(false);
 
+        textInput.clear();
+        textInput.clear();
     }
 
     public void addVersionToMenu(Version... versions){
@@ -248,7 +249,7 @@ public class MainWindowController  {
     }
 
     public void handleExecutionException(String type, String description){
-        textOutput.setText("Exception "+type+" occurred. Message from server:"+System.lineSeparator()+"-----------------------------------"+System.lineSeparator()+description);
+        textOutput.setText("Exception "+type+" occurred."+System.lineSeparator()+"Message from server:"+System.lineSeparator()+"-----------------------------------"+System.lineSeparator()+description);
         addLog(type, LogType.Error);
     }
 
@@ -258,7 +259,7 @@ public class MainWindowController  {
     }
 
     public void save(){
-        SaveVersionResponse res = (SaveVersionResponse)connection.sendRequest(new SaveVersionRequest(textCode.getText(), System.currentTimeMillis(), currentProject));
+        SaveVersionResponse res = (SaveVersionResponse)connection.sendRequest(new SaveVersionRequest(textCode.getText().trim(), System.currentTimeMillis(), currentProject));
         if (res.success){
             addLog("Saved successfully.",LogType.Success);
             addVersionToMenu(res.latestVersion);

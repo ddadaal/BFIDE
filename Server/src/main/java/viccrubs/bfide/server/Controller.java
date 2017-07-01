@@ -15,6 +15,7 @@ import viccrubs.bfide.server.storage.exception.ProjectNotExistException;
 import viccrubs.bfide.server.storage.exception.UserExistsException;
 import viccrubs.bfide.util.ConfiguredGson;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,22 +48,17 @@ public class Controller implements Runnable {
 
     public void output(Response res){
         out.print(gson.toJson(res));
-        out.print("\r\n");
+        out.print("\r\n\r\n");
     }
 
 
     @RequestHandler(requestType = RequestType.CreateNewProject)
     public Response handleCreateNewProject(CreateNewProjectRequest request){
-        if (projectManager.projectExists(request.projectName)){
-            return new CreateNewProjectResponse(false,null, ProjectExistsException.description);
-        }else{
-            try {
-                ProjectInfo info = projectManager.createNewProject(request.projectName, request.language);
-                return new CreateNewProjectResponse(info!=null,info, "");
-            } catch (ProjectExistsException e) {
-                return new CreateNewProjectResponse(false,null, ProjectExistsException.description);
-            }
-
+        try {
+            ProjectInfo info = projectManager.createNewProject(request.projectName, request.language);
+            return new CreateNewProjectResponse(info!=null,info, "");
+        } catch (ProjectExistsException e) {
+            return new CreateNewProjectResponse(false,null, e.toString());
         }
     }
 
@@ -70,9 +66,9 @@ public class Controller implements Runnable {
     public Response handleDeleteProject(DeleteProjectRequest request){
         try{
             boolean result = projectManager.deleteProject(request.projectInfo);
-            return new DeleteProjectResponse(true, "");
+            return new DeleteProjectResponse(result, result ?"success":"Something bad happened.");
         }catch(ProjectNotExistException ex){
-            return new DeleteProjectResponse(false, ProjectNotExistException.description);
+            return new DeleteProjectResponse(false, ex.toString());
         }
 
     }
@@ -102,9 +98,9 @@ public class Controller implements Runnable {
 
     @RequestHandler(requestType = RequestType.Login)
     public Response handleLogin(LoginRequest request){
-        UserManager auth = new UserManager();
+        UserManager userManager = new UserManager();
 
-        currentUser = auth.authenticate(request.username, request.password).orElse(null);
+        currentUser = userManager.authenticate(request.username, request.password).orElse(null);
 
         if (currentUser!=null){
             machine = new BFMachine();
@@ -120,10 +116,8 @@ public class Controller implements Runnable {
         try{
             User user = auth.register(request.username, request.password);
             return new RegisterResponse(true,"");
-        }catch (UserExistsException ex){
-            return new RegisterResponse(false, UserExistsException.description);
         }catch(Exception ex){
-            return new RegisterResponse(false, "");
+            return new RegisterResponse(false, ex.toString());
         }
     }
 
@@ -160,17 +154,23 @@ public class Controller implements Runnable {
     public Response handleSaveVersion(SaveVersionRequest request){
         try {
             ProjectInfo info = projectManager.getProjectInfo(request.project.projectName);
-            Version latestVersion = info.latestVersion;
+            Version latestVersion = info.versions[0];
             String latestContent = projectManager.getContentOfAVersion(info,latestVersion).trim();
             if (latestVersion == null || !request.content.trim().equals(latestContent)){
-                latestVersion = projectManager.createNewVersion(info, request.content, new Version(request.timestamp));
-                return new SaveVersionResponse(true, "", latestVersion);
+                try {
+                    latestVersion = projectManager.createNewVersion(info, request.content, new Version(request.timestamp));
+                    return new SaveVersionResponse(true, "", latestVersion);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return new SaveVersionResponse(false, "Internal Exception", latestVersion);
+                }
+
             }else {
                 return new SaveVersionResponse(false, "Nothing has changed from last version.", latestVersion);
             }
 
         } catch (ProjectNotExistException e) {
-            return new SaveVersionResponse(false, ProjectNotExistException.description, null);
+            return new SaveVersionResponse(false, e.toString(), null);
         }
 
     }
@@ -194,7 +194,7 @@ public class Controller implements Runnable {
 
             out = new PrintStream(client.getOutputStream());
             Scanner inScanner = new Scanner(client.getInputStream());
-            inScanner.useDelimiter("\r\n");
+            inScanner.useDelimiter("\r\n\r\n");
 
             while (inScanner.hasNext() && !terminate) {
                 Request request = gson.fromJson(inScanner.next(), Request.class);

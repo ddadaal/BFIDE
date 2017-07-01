@@ -9,4 +9,8 @@ public class InputTooShortException extends BFMachineException {
     public InputTooShortException(BFMachineStates states) {
         super(states);
     }
+    @Override
+    public String description(){
+        return "Input is not sufficient. Input more to satisfy codes' requirement.";
+    }
 }

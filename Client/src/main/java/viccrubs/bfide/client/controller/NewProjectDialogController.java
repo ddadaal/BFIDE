@@ -48,6 +48,13 @@ public class NewProjectDialogController {
     }
 
     public void onCreate(){
+        if (tfProjectName.getText().length()==0){
+            Alert alertDialog = new Alert(Alert.AlertType.ERROR);
+            alertDialog.setContentText("Please input name.");
+            alertDialog.setHeaderText(null);
+            alertDialog.showAndWait();
+            return;
+        }
 
         CreateNewProjectResponse res = (CreateNewProjectResponse)connection.sendRequest(new CreateNewProjectRequest(tfProjectName.getText(),language));
         if (res.success){

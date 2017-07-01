@@ -6,10 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import viccrubs.bfide.bfmachine.program.ProgramLanguage;
 import viccrubs.bfide.client.MainClient;
@@ -42,16 +39,23 @@ public class OpenProjectDialogController {
     private TableColumn<ProjectInfoModel,String> latestVersionColumn;
     @FXML
     private TableColumn<ProjectInfoModel,String> versionCountColumn;
-
+    @FXML
+    private Button btnDelete;
 
     private Connection connection;
     private ObservableList<ProjectInfoModel> projects = FXCollections.observableArrayList();
     private Stage stage;
     private Consumer<ProjectInfo> eventOnProjectSelect;
     private Runnable eventOnProjectCreate;
+    private ProjectInfo currentProject;
 
     public void setStage(Stage stage){
         this.stage = stage;
+    }
+
+    public void setCurrentProject(ProjectInfo info){
+        this.currentProject = info;
+
     }
 
     @FXML
@@ -61,6 +65,16 @@ public class OpenProjectDialogController {
         languageColumn.setCellValueFactory(cellData -> cellData.getValue().languageProperty());
         latestVersionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(DateUtil.format(cellData.getValue().getLatestVersion())));
         versionCountColumn.setCellValueFactory(cellData -> cellData.getValue().versionCountProperty());
+        projectTable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> changeDeleteAvailability(newValue));
+
+    }
+
+    private void changeDeleteAvailability(ProjectInfoModel selected){
+        if (selected!=null){
+            btnDelete.setDisable(selected.toProjectInfo().equals(currentProject));
+        }
+
     }
 
     public void setConnection(Connection connection){

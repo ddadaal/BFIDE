@@ -48,8 +48,6 @@ public class BFMachine {
 
     public void executeInstruction(Instruction instruction) {
         switch (instruction.instructionChar) {
-            case ' ':
-                break;
             case '\n':
                 this.states.lineCounter++;
                 this.states.instructionCounter=-1;
