@@ -27,7 +27,7 @@ public class ProjectInfoModel {
     private final ObjectProperty<Instant> latestVersion;
     private final StringProperty versionCount;
     private final ObjectProperty<ProgramLanguage> language;
-    private ProjectInfo originalInfo;
+    private final ProjectInfo originalInfo;
 
     public String getProjectName() {
         return projectName.get();

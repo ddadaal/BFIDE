@@ -107,6 +107,7 @@ public class MainWindowController  {
     private Button btnRedo;
 
 
+
     @FXML
     public void initialize(){
         setLanguage(ProgramLanguage.BF);

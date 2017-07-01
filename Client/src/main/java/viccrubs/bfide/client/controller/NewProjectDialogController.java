@@ -32,6 +32,7 @@ public class NewProjectDialogController {
 
     private Stage stage;
     private Connection connection;
+
     private Consumer<ProjectInfo> eventOnProjectSelect;
 
 
